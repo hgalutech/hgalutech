@@ -39,12 +39,12 @@ type Draft = {
   nameEn: string;
   slug: string;
   role: PersonRole;
+  leadershipSection: "board" | "operational";
   boardDesignation: string;
   yearsExperience: number;
   bioEn: string;
   photoUrl: string;
   photoId: string | null;
-  sortOrder: number;
   showOnInvestorPage: boolean;
   showOnChairmansPage: boolean;
 };
@@ -54,12 +54,12 @@ function fromPerson(p: PersonDTO): Draft {
     nameEn: p.name.en,
     slug: p.slug,
     role: p.role,
+    leadershipSection: p.leadershipSection ?? "board",
     boardDesignation: p.boardDesignation,
     yearsExperience: p.yearsExperience,
     bioEn: p.bio.en,
     photoUrl: p.photoUrl ?? "",
     photoId: p.photoId,
-    sortOrder: p.sortOrder,
     showOnInvestorPage: p.showOnInvestorPage,
     showOnChairmansPage: p.showOnChairmansPage,
   };
@@ -69,21 +69,17 @@ const emptyDraft = (): Draft => ({
   nameEn: "",
   slug: "",
   role: "director",
+  leadershipSection: "board",
   boardDesignation: "",
   yearsExperience: 0,
   bioEn: "",
   photoUrl: "",
   photoId: null,
-  sortOrder: 0,
   showOnInvestorPage: false,
   showOnChairmansPage: false,
 });
 
-export function CorporatePeopleEditor({
-  personId,
-}: {
-  personId: string | "new";
-}) {
+export function CorporatePeopleEditor({ personId }: { personId: string | "new" }) {
   const router = useRouter();
   const isNew = personId === "new";
   const [id, setId] = useState<string | null>(isNew ? null : personId);
@@ -96,16 +92,11 @@ export function CorporatePeopleEditor({
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const dirty = useMemo(
-    () => JSON.stringify(draft) !== baseline,
-    [draft, baseline],
-  );
+  const dirty = useMemo(() => JSON.stringify(draft) !== baseline, [draft, baseline]);
 
-  const canPublish =
-    Boolean(draft.nameEn.trim()) && Boolean(draft.slug.trim());
+  const canPublish = Boolean(draft.nameEn.trim()) && Boolean(draft.slug.trim());
 
-  const patch = (partial: Partial<Draft>) =>
-    setDraft((d) => ({ ...d, ...partial }));
+  const patch = (partial: Partial<Draft>) => setDraft((d) => ({ ...d, ...partial }));
 
   const load = useCallback(async () => {
     if (isNew) {
@@ -139,12 +130,12 @@ export function CorporatePeopleEditor({
       name: { en: draft.nameEn.trim() },
       slug: draft.slug.trim(),
       role: draft.role,
+      leadershipSection: draft.leadershipSection,
       boardDesignation: draft.boardDesignation.trim(),
       yearsExperience: draft.yearsExperience,
       bio: { en: draft.bioEn.trim() },
       photoUrl: draft.photoUrl.trim() || null,
       photoId: draft.photoId,
-      sortOrder: draft.sortOrder,
       showOnInvestorPage: draft.showOnInvestorPage,
       showOnChairmansPage: draft.showOnChairmansPage,
       ...(nextStatus ? { status: nextStatus } : {}),
@@ -236,10 +227,7 @@ export function CorporatePeopleEditor({
   return (
     <div className="mx-auto flex w-full max-w-[52rem] flex-col pb-2">
       <header className="mb-4 flex flex-col gap-2">
-        <DeskBackLink
-          href="/admin/corporate/people"
-          label="Back to people"
-        />
+        <DeskBackLink href="/admin/corporate/people" label="Back to people" />
         <h1 className="font-display text-xl font-semibold tracking-tight">
           {isNew && !id ? "New person" : draft.nameEn || "Person"}
         </h1>
@@ -299,20 +287,20 @@ export function CorporatePeopleEditor({
               type="number"
               className={corporateInputClass}
               value={draft.yearsExperience}
-              onChange={(e) =>
-                patch({ yearsExperience: Number(e.target.value) || 0 })
-              }
+              onChange={(e) => patch({ yearsExperience: Number(e.target.value) || 0 })}
             />
           </CorporateField>
-          <CorporateField label="Sort order">
-            <input
-              type="number"
+          <CorporateField label="Leadership section">
+            <select
               className={corporateInputClass}
-              value={draft.sortOrder}
+              value={draft.leadershipSection}
               onChange={(e) =>
-                patch({ sortOrder: Number(e.target.value) || 0 })
+                patch({ leadershipSection: e.target.value as "board" | "operational" })
               }
-            />
+            >
+              <option value="board">Board of Directors</option>
+              <option value="operational">Operational Leadership</option>
+            </select>
           </CorporateField>
           <div className="sm:col-span-2">
             <CloudinaryPicker
@@ -330,10 +318,7 @@ export function CorporatePeopleEditor({
           </div>
           <CorporateField label="Bio" className="sm:col-span-2">
             <textarea
-              className={cn(
-                corporateInputClass,
-                "h-auto min-h-[120px] resize-y py-2",
-              )}
+              className={cn(corporateInputClass, "h-auto min-h-[120px] resize-y py-2")}
               value={draft.bioEn}
               onChange={(e) => patch({ bioEn: e.target.value })}
               rows={5}

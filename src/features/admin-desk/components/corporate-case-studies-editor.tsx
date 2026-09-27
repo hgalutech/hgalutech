@@ -60,9 +60,7 @@ export function CorporateCaseStudiesEditor({
   const isNew = caseStudyId === "new";
   const [id, setId] = useState<string | null>(isNew ? null : caseStudyId);
   const [version, setVersion] = useState(1);
-  const [publishStatus, setPublishStatus] = useState<"draft" | "published">(
-    "draft",
-  );
+  const [publishStatus, setPublishStatus] = useState<"draft" | "published">("draft");
   const [draft, setDraft] = useState<Draft>(emptyDraft);
   const [baseline, setBaseline] = useState("");
   const [loading, setLoading] = useState(!isNew);
@@ -70,14 +68,14 @@ export function CorporateCaseStudiesEditor({
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const dirty = useMemo(
-    () => JSON.stringify(draft) !== baseline,
-    [draft, baseline],
-  );
-  const canPublish =
-    Boolean(draft.titleEn.trim()) && Boolean(draft.slug.trim());
-  const patch = (partial: Partial<Draft>) =>
-    setDraft((d) => ({ ...d, ...partial }));
+  const dirty = useMemo(() => JSON.stringify(draft) !== baseline, [draft, baseline]);
+  const canPublish = Boolean(draft.titleEn.trim()) && Boolean(draft.slug.trim());
+  const canPublishBlocked = !draft.approvedForWebsite
+    ? "Mark \u201cApproved for website\u201d before publish."
+    : !draft.titleEn.trim() || !draft.slug.trim()
+      ? "Add title and slug before publish."
+      : undefined;
+  const patch = (partial: Partial<Draft>) => setDraft((d) => ({ ...d, ...partial }));
 
   const load = useCallback(async () => {
     if (isNew) {
@@ -119,10 +117,15 @@ export function CorporateCaseStudiesEditor({
   }
 
   async function persist(publish?: "draft" | "published") {
+    if (publish === "published" && !draft.approvedForWebsite) {
+      setError("Mark \u201cApproved for website\u201d before publish.");
+      return;
+    }
     setSaving(true);
     setMessage(null);
     setError(null);
     try {
+      // Always send full payload — never status-only (Zod default leak bug).
       if (!id) {
         const created = await createCaseStudyApi(payload(publish ?? "draft"));
         setId(created.id);
@@ -132,42 +135,19 @@ export function CorporateCaseStudiesEditor({
         setDraft(d);
         setBaseline(JSON.stringify(d));
         router.replace(`/admin/corporate/case-studies/${created.id}`);
-        setMessage(
-          publish === "published" ? "Published." : "Case study created.",
-        );
+        setMessage(publish === "published" ? "Published." : "Case study created.");
         return;
       }
-      let currentVersion = version;
-      if (dirty) {
-        const updated = await updateCaseStudyApi(id, {
-          ...payload(),
-          version: currentVersion,
-        });
-        currentVersion = updated.version;
-      }
-      if (publish === "published") {
-        const published = await updateCaseStudyApi(id, {
-          publishStatus: "published",
-          version: currentVersion,
-        });
-        setVersion(published.version);
-        setPublishStatus(published.publishStatus);
-        const d = fromCase(published);
-        setDraft(d);
-        setBaseline(JSON.stringify(d));
-        setMessage("Published.");
-      } else {
-        const updated = await updateCaseStudyApi(id, {
-          ...payload(),
-          version: currentVersion,
-        });
-        setVersion(updated.version);
-        setPublishStatus(updated.publishStatus);
-        const d = fromCase(updated);
-        setDraft(d);
-        setBaseline(JSON.stringify(d));
-        setMessage("Draft saved.");
-      }
+      const updated = await updateCaseStudyApi(id, {
+        ...payload(publish),
+        version,
+      });
+      setVersion(updated.version);
+      setPublishStatus(updated.publishStatus);
+      const d = fromCase(updated);
+      setDraft(d);
+      setBaseline(JSON.stringify(d));
+      setMessage(publish === "published" ? "Published." : "Draft saved.");
     } catch (err) {
       if (err instanceof ApiClientError && err.code === "CONFLICT") {
         setError("Someone else saved first. Reload and try again.");
@@ -180,18 +160,13 @@ export function CorporateCaseStudiesEditor({
   }
 
   if (loading) {
-    return (
-      <p className="text-muted-foreground text-sm">Loading case study…</p>
-    );
+    return <p className="text-muted-foreground text-sm">Loading case study…</p>;
   }
 
   return (
     <div className="mx-auto flex w-full max-w-[52rem] flex-col pb-2">
       <header className="mb-4 flex flex-col gap-2">
-        <DeskBackLink
-          href="/admin/corporate/case-studies"
-          label="Back to case studies"
-        />
+        <DeskBackLink href="/admin/corporate/case-studies" label="Back to case studies" />
         <h1 className="font-display text-xl font-semibold tracking-tight">
           {isNew && !id ? "New case study" : draft.titleEn || "Case study"}
         </h1>
@@ -235,10 +210,7 @@ export function CorporateCaseStudiesEditor({
           </CorporateField>
           <CorporateField label="Summary" className="sm:col-span-2">
             <textarea
-              className={cn(
-                corporateInputClass,
-                "h-auto min-h-[80px] resize-y py-2",
-              )}
+              className={cn(corporateInputClass, "h-auto min-h-[80px] resize-y py-2")}
               value={draft.summaryEn}
               onChange={(e) => patch({ summaryEn: e.target.value })}
               rows={3}
@@ -279,10 +251,8 @@ export function CorporateCaseStudiesEditor({
       <DeskSaveBar
         saving={saving}
         dirty={dirty || !id}
-        canPublish={canPublish}
-        publishBlockedReason={
-          canPublish ? undefined : "Add title and slug before publish."
-        }
+        canPublish={canPublish && !canPublishBlocked}
+        publishBlockedReason={canPublishBlocked}
         statusLabel={publishStatus}
         onSave={() => void persist()}
         onPublish={() => void persist("published")}

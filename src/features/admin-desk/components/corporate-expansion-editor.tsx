@@ -49,8 +49,7 @@ function fromProject(p: ExpansionProjectDTO): Draft {
     locationNote: p.locationNote,
     expectedStart: p.expectedStart,
     expectedCommissioning: p.expectedCommissioning,
-    projectCostInr:
-      p.projectCostInr == null ? "" : String(p.projectCostInr),
+    projectCostInr: p.projectCostInr == null ? "" : String(p.projectCostInr),
     estimatedRevenueInr:
       p.estimatedRevenueInr == null ? "" : String(p.estimatedRevenueInr),
     publicDisclosureApproved: p.publicDisclosureApproved,
@@ -79,18 +78,12 @@ function parseOptionalNumber(s: string): number | null {
   return Number.isFinite(n) ? n : null;
 }
 
-export function CorporateExpansionEditor({
-  projectId,
-}: {
-  projectId: string | "new";
-}) {
+export function CorporateExpansionEditor({ projectId }: { projectId: string | "new" }) {
   const router = useRouter();
   const isNew = projectId === "new";
   const [id, setId] = useState<string | null>(isNew ? null : projectId);
   const [version, setVersion] = useState(1);
-  const [publishStatus, setPublishStatus] = useState<"draft" | "published">(
-    "draft",
-  );
+  const [publishStatus, setPublishStatus] = useState<"draft" | "published">("draft");
   const [draft, setDraft] = useState<Draft>(emptyDraft);
   const [baseline, setBaseline] = useState("");
   const [loading, setLoading] = useState(!isNew);
@@ -98,16 +91,11 @@ export function CorporateExpansionEditor({
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const dirty = useMemo(
-    () => JSON.stringify(draft) !== baseline,
-    [draft, baseline],
-  );
+  const dirty = useMemo(() => JSON.stringify(draft) !== baseline, [draft, baseline]);
 
-  const canPublish =
-    Boolean(draft.titleEn.trim()) && Boolean(draft.slug.trim());
+  const canPublish = Boolean(draft.titleEn.trim()) && Boolean(draft.slug.trim());
 
-  const patch = (partial: Partial<Draft>) =>
-    setDraft((d) => ({ ...d, ...partial }));
+  const patch = (partial: Partial<Draft>) => setDraft((d) => ({ ...d, ...partial }));
 
   const load = useCallback(async () => {
     if (isNew) {
@@ -197,9 +185,8 @@ export function CorporateExpansionEditor({
     setMessage(null);
     setError(null);
     try {
-      const currentId = id;
-      let currentVersion = version;
-      if (!currentId) {
+      // Always send full payload — never status-only (Zod default leak bug).
+      if (!id) {
         const created = await createExpansionProjectApi(payload("published"));
         setId(created.id);
         setVersion(created.version);
@@ -211,16 +198,9 @@ export function CorporateExpansionEditor({
         setMessage("Published.");
         return;
       }
-      if (dirty) {
-        const updated = await updateExpansionProjectApi(currentId, {
-          ...payload(),
-          version: currentVersion,
-        });
-        currentVersion = updated.version;
-      }
-      const published = await updateExpansionProjectApi(currentId, {
-        publishStatus: "published",
-        version: currentVersion,
+      const published = await updateExpansionProjectApi(id, {
+        ...payload("published"),
+        version,
       });
       setVersion(published.version);
       setPublishStatus(published.publishStatus);
@@ -242,10 +222,7 @@ export function CorporateExpansionEditor({
   return (
     <div className="mx-auto flex w-full max-w-[52rem] flex-col pb-2">
       <header className="mb-4 flex flex-col gap-2">
-        <DeskBackLink
-          href="/admin/corporate/expansion"
-          label="Back to expansion"
-        />
+        <DeskBackLink href="/admin/corporate/expansion" label="Back to expansion" />
         <h1 className="font-display text-xl font-semibold tracking-tight">
           {isNew && !id ? "New expansion project" : draft.titleEn || "Project"}
         </h1>
@@ -281,9 +258,7 @@ export function CorporateExpansionEditor({
             <select
               className={corporateInputClass}
               value={draft.status}
-              onChange={(e) =>
-                patch({ status: e.target.value as ExpansionStatus })
-              }
+              onChange={(e) => patch({ status: e.target.value as ExpansionStatus })}
             >
               {EXPANSION_STATUSES.map((s) => (
                 <option key={s} value={s}>
@@ -311,9 +286,7 @@ export function CorporateExpansionEditor({
             <input
               className={corporateInputClass}
               value={draft.expectedCommissioning}
-              onChange={(e) =>
-                patch({ expectedCommissioning: e.target.value })
-              }
+              onChange={(e) => patch({ expectedCommissioning: e.target.value })}
             />
           </CorporateField>
           <CorporateField label="Project cost (INR)">
@@ -327,9 +300,7 @@ export function CorporateExpansionEditor({
             <input
               className={corporateInputClass}
               value={draft.estimatedRevenueInr}
-              onChange={(e) =>
-                patch({ estimatedRevenueInr: e.target.value })
-              }
+              onChange={(e) => patch({ estimatedRevenueInr: e.target.value })}
             />
           </CorporateField>
           <CorporateField label="Sort order">
@@ -337,17 +308,12 @@ export function CorporateExpansionEditor({
               type="number"
               className={corporateInputClass}
               value={draft.sortOrder}
-              onChange={(e) =>
-                patch({ sortOrder: Number(e.target.value) || 0 })
-              }
+              onChange={(e) => patch({ sortOrder: Number(e.target.value) || 0 })}
             />
           </CorporateField>
           <CorporateField label="Description" className="sm:col-span-2">
             <textarea
-              className={cn(
-                corporateInputClass,
-                "h-auto min-h-[100px] resize-y py-2",
-              )}
+              className={cn(corporateInputClass, "h-auto min-h-[100px] resize-y py-2")}
               value={draft.descriptionEn}
               onChange={(e) => patch({ descriptionEn: e.target.value })}
               rows={4}

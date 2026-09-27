@@ -20,13 +20,7 @@ export type CompanyLocationDTO = {
 };
 
 export type SocialPlatform =
-  | "linkedin"
-  | "facebook"
-  | "instagram"
-  | "youtube"
-  | "x"
-  | "whatsapp"
-  | "other";
+  "linkedin" | "facebook" | "instagram" | "youtube" | "x" | "whatsapp" | "other";
 
 /** CMS-managed social profile link (footer, drawer, contact, sameAs). */
 export type SocialLinkDTO = {
@@ -77,6 +71,7 @@ export type PersonDTO = {
   photoId: string | null;
   photoUrl: string | null;
   sortOrder: number;
+  leadershipSection: "board" | "operational";
   status: "draft" | "published";
   showOnInvestorPage: boolean;
   showOnChairmansPage: boolean;
@@ -93,13 +88,7 @@ export type CapacityMetricDTO = {
   value: string;
   unit: string;
   category:
-    | "extrusion"
-    | "billet"
-    | "ingot"
-    | "melting"
-    | "press"
-    | "dimension"
-    | "commercial";
+    "extrusion" | "billet" | "ingot" | "melting" | "press" | "dimension" | "commercial";
   sourceNote: string;
   verificationStatus: "draft" | "needs_verification" | "verified";
   verifiedBy: string | null;

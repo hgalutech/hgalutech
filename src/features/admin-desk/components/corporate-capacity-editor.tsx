@@ -59,18 +59,12 @@ const emptyDraft = (): Draft => ({
   displayOrder: 0,
 });
 
-export function CorporateCapacityEditor({
-  metricId,
-}: {
-  metricId: string | "new";
-}) {
+export function CorporateCapacityEditor({ metricId }: { metricId: string | "new" }) {
   const router = useRouter();
   const isNew = metricId === "new";
   const [id, setId] = useState<string | null>(isNew ? null : metricId);
   const [version, setVersion] = useState(1);
-  const [publishStatus, setPublishStatus] = useState<"hidden" | "published">(
-    "hidden",
-  );
+  const [publishStatus, setPublishStatus] = useState<"hidden" | "published">("hidden");
   const [draft, setDraft] = useState<Draft>(emptyDraft);
   const [baseline, setBaseline] = useState("");
   const [loading, setLoading] = useState(!isNew);
@@ -78,18 +72,14 @@ export function CorporateCapacityEditor({
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const dirty = useMemo(
-    () => JSON.stringify(draft) !== baseline,
-    [draft, baseline],
-  );
+  const dirty = useMemo(() => JSON.stringify(draft) !== baseline, [draft, baseline]);
 
   const canPublish =
     Boolean(draft.key.trim()) &&
     Boolean(draft.labelEn.trim()) &&
     Boolean(draft.value.trim());
 
-  const patch = (partial: Partial<Draft>) =>
-    setDraft((d) => ({ ...d, ...partial }));
+  const patch = (partial: Partial<Draft>) => setDraft((d) => ({ ...d, ...partial }));
 
   const load = useCallback(async () => {
     if (isNew) {
@@ -176,9 +166,8 @@ export function CorporateCapacityEditor({
     setMessage(null);
     setError(null);
     try {
-      const currentId = id;
-      let currentVersion = version;
-      if (!currentId) {
+      // Always send full payload — never status-only (Zod default leak bug).
+      if (!id) {
         const created = await createCapacityMetricApi(payload("published"));
         setId(created.id);
         setVersion(created.version);
@@ -190,16 +179,9 @@ export function CorporateCapacityEditor({
         setMessage("Published.");
         return;
       }
-      if (dirty) {
-        const updated = await updateCapacityMetricApi(currentId, {
-          ...payload(),
-          version: currentVersion,
-        });
-        currentVersion = updated.version;
-      }
-      const published = await updateCapacityMetricApi(currentId, {
-        publishStatus: "published",
-        version: currentVersion,
+      const published = await updateCapacityMetricApi(id, {
+        ...payload("published"),
+        version,
       });
       setVersion(published.version);
       setPublishStatus(published.publishStatus);
@@ -221,10 +203,7 @@ export function CorporateCapacityEditor({
   return (
     <div className="mx-auto flex w-full max-w-[52rem] flex-col pb-2">
       <header className="mb-4 flex flex-col gap-2">
-        <DeskBackLink
-          href="/admin/corporate/capacity"
-          label="Back to capacity"
-        />
+        <DeskBackLink href="/admin/corporate/capacity" label="Back to capacity" />
         <h1 className="font-display text-xl font-semibold tracking-tight">
           {isNew && !id ? "New capacity metric" : draft.labelEn || "Metric"}
         </h1>
@@ -263,9 +242,7 @@ export function CorporateCapacityEditor({
             <select
               className={corporateInputClass}
               value={draft.category}
-              onChange={(e) =>
-                patch({ category: e.target.value as CapacityCategory })
-              }
+              onChange={(e) => patch({ category: e.target.value as CapacityCategory })}
             >
               {CAPACITY_CATEGORIES.map((c) => (
                 <option key={c} value={c}>
@@ -295,8 +272,7 @@ export function CorporateCapacityEditor({
               value={draft.verificationStatus}
               onChange={(e) =>
                 patch({
-                  verificationStatus: e.target
-                    .value as Draft["verificationStatus"],
+                  verificationStatus: e.target.value as Draft["verificationStatus"],
                 })
               }
             >
@@ -310,9 +286,7 @@ export function CorporateCapacityEditor({
               type="number"
               className={corporateInputClass}
               value={draft.displayOrder}
-              onChange={(e) =>
-                patch({ displayOrder: Number(e.target.value) || 0 })
-              }
+              onChange={(e) => patch({ displayOrder: Number(e.target.value) || 0 })}
             />
           </CorporateField>
           <CorporateField label="Source note" className="sm:col-span-2">
@@ -352,9 +326,7 @@ export function CorporateCapacityEditor({
         dirty={dirty || !id}
         canPublish={canPublish}
         publishBlockedReason={
-          canPublish
-            ? undefined
-            : "Add key, label and value before publish."
+          canPublish ? undefined : "Add key, label and value before publish."
         }
         statusLabel={publishStatus}
         onSave={() => void onSave()}

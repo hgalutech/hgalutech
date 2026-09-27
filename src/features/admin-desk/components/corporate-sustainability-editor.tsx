@@ -65,9 +65,7 @@ export function CorporateSustainabilityEditor({
   const isNew = metricId === "new";
   const [id, setId] = useState<string | null>(isNew ? null : metricId);
   const [version, setVersion] = useState(1);
-  const [publishStatus, setPublishStatus] = useState<"hidden" | "published">(
-    "hidden",
-  );
+  const [publishStatus, setPublishStatus] = useState<"hidden" | "published">("hidden");
   const [draft, setDraft] = useState<Draft>(emptyDraft);
   const [baseline, setBaseline] = useState("");
   const [loading, setLoading] = useState(!isNew);
@@ -75,14 +73,9 @@ export function CorporateSustainabilityEditor({
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const dirty = useMemo(
-    () => JSON.stringify(draft) !== baseline,
-    [draft, baseline],
-  );
-  const canPublish =
-    Boolean(draft.key.trim()) && Boolean(draft.labelEn.trim());
-  const patch = (partial: Partial<Draft>) =>
-    setDraft((d) => ({ ...d, ...partial }));
+  const dirty = useMemo(() => JSON.stringify(draft) !== baseline, [draft, baseline]);
+  const canPublish = Boolean(draft.key.trim()) && Boolean(draft.labelEn.trim());
+  const patch = (partial: Partial<Draft>) => setDraft((d) => ({ ...d, ...partial }));
 
   const load = useCallback(async () => {
     if (isNew) {
@@ -129,10 +122,9 @@ export function CorporateSustainabilityEditor({
     setMessage(null);
     setError(null);
     try {
+      // Always send full payload — never status-only (Zod default leak bug).
       if (!id) {
-        const created = await createSustainabilityMetricApi(
-          payload(publish ?? "hidden"),
-        );
+        const created = await createSustainabilityMetricApi(payload(publish ?? "hidden"));
         setId(created.id);
         setVersion(created.version);
         setPublishStatus(created.publishStatus);
@@ -143,38 +135,16 @@ export function CorporateSustainabilityEditor({
         setMessage(publish === "published" ? "Published." : "Metric created.");
         return;
       }
-      let currentVersion = version;
-      if (JSON.stringify(draft) !== baseline) {
-        const updated = await updateSustainabilityMetricApi(id, {
-          ...payload(),
-          version: currentVersion,
-        });
-        currentVersion = updated.version;
-        setVersion(updated.version);
-      }
-      if (publish === "published") {
-        const published = await updateSustainabilityMetricApi(id, {
-          publishStatus: "published",
-          version: currentVersion,
-        });
-        setVersion(published.version);
-        setPublishStatus(published.publishStatus);
-        const d = fromMetric(published);
-        setDraft(d);
-        setBaseline(JSON.stringify(d));
-        setMessage("Published.");
-      } else {
-        const updated = await updateSustainabilityMetricApi(id, {
-          ...payload(),
-          version: currentVersion,
-        });
-        setVersion(updated.version);
-        setPublishStatus(updated.publishStatus);
-        const d = fromMetric(updated);
-        setDraft(d);
-        setBaseline(JSON.stringify(d));
-        setMessage("Draft saved.");
-      }
+      const updated = await updateSustainabilityMetricApi(id, {
+        ...payload(publish),
+        version,
+      });
+      setVersion(updated.version);
+      setPublishStatus(updated.publishStatus);
+      const d = fromMetric(updated);
+      setDraft(d);
+      setBaseline(JSON.stringify(d));
+      setMessage(publish === "published" ? "Published." : "Draft saved.");
     } catch (err) {
       if (err instanceof ApiClientError && err.code === "CONFLICT") {
         setError("Someone else saved first. Reload and try again.");
@@ -259,8 +229,7 @@ export function CorporateSustainabilityEditor({
               value={draft.verificationStatus}
               onChange={(e) =>
                 patch({
-                  verificationStatus: e.target
-                    .value as Draft["verificationStatus"],
+                  verificationStatus: e.target.value as Draft["verificationStatus"],
                 })
               }
             >

@@ -61,9 +61,7 @@ export function CorporateCertificationsEditor({
   const isNew = certificationId === "new";
   const [id, setId] = useState<string | null>(isNew ? null : certificationId);
   const [version, setVersion] = useState(1);
-  const [publishStatus, setPublishStatus] = useState<"draft" | "published">(
-    "draft",
-  );
+  const [publishStatus, setPublishStatus] = useState<"draft" | "published">("draft");
   const [draft, setDraft] = useState<Draft>(emptyDraft);
   const [baseline, setBaseline] = useState("");
   const [loading, setLoading] = useState(!isNew);
@@ -71,15 +69,11 @@ export function CorporateCertificationsEditor({
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const dirty = useMemo(
-    () => JSON.stringify(draft) !== baseline,
-    [draft, baseline],
-  );
+  const dirty = useMemo(() => JSON.stringify(draft) !== baseline, [draft, baseline]);
 
   const canPublish = Boolean(draft.name.trim());
 
-  const patch = (partial: Partial<Draft>) =>
-    setDraft((d) => ({ ...d, ...partial }));
+  const patch = (partial: Partial<Draft>) => setDraft((d) => ({ ...d, ...partial }));
 
   const load = useCallback(async () => {
     if (isNew) {
@@ -98,9 +92,7 @@ export function CorporateCertificationsEditor({
       setPublishStatus(c.publishStatus);
       setId(c.id);
     } catch (err) {
-      setError(
-        err instanceof Error ? err.message : "Failed to load certification",
-      );
+      setError(err instanceof Error ? err.message : "Failed to load certification");
     } finally {
       setLoading(false);
     }
@@ -166,9 +158,8 @@ export function CorporateCertificationsEditor({
     setMessage(null);
     setError(null);
     try {
-      const currentId = id;
-      let currentVersion = version;
-      if (!currentId) {
+      // Always send full payload — never status-only (Zod default leak bug).
+      if (!id) {
         const created = await createCertificationApi(payload("published"));
         setId(created.id);
         setVersion(created.version);
@@ -180,16 +171,9 @@ export function CorporateCertificationsEditor({
         setMessage("Published.");
         return;
       }
-      if (dirty) {
-        const updated = await updateCertificationApi(currentId, {
-          ...payload(),
-          version: currentVersion,
-        });
-        currentVersion = updated.version;
-      }
-      const published = await updateCertificationApi(currentId, {
-        publishStatus: "published",
-        version: currentVersion,
+      const published = await updateCertificationApi(id, {
+        ...payload("published"),
+        version,
       });
       setVersion(published.version);
       setPublishStatus(published.publishStatus);
@@ -205,9 +189,7 @@ export function CorporateCertificationsEditor({
   }
 
   if (loading) {
-    return (
-      <p className="text-muted-foreground text-sm">Loading certification…</p>
-    );
+    return <p className="text-muted-foreground text-sm">Loading certification…</p>;
   }
 
   return (
@@ -239,9 +221,7 @@ export function CorporateCertificationsEditor({
             <select
               className={corporateInputClass}
               value={draft.type}
-              onChange={(e) =>
-                patch({ type: e.target.value as CertificationType })
-              }
+              onChange={(e) => patch({ type: e.target.value as CertificationType })}
             >
               {CERTIFICATION_TYPES.map((t) => (
                 <option key={t} value={t}>
@@ -310,9 +290,7 @@ export function CorporateCertificationsEditor({
         saving={saving}
         dirty={dirty || !id}
         canPublish={canPublish}
-        publishBlockedReason={
-          canPublish ? undefined : "Add a name before publish."
-        }
+        publishBlockedReason={canPublish ? undefined : "Add a name before publish."}
         statusLabel={publishStatus}
         onSave={() => void onSave()}
         onPublish={() => void onPublish()}

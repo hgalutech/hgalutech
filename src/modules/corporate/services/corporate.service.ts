@@ -71,7 +71,8 @@ function toCompanyDTO(doc: Record<string, unknown>): CompanyProfileDTO {
   const emails = (doc.emails as Record<string, string>) ?? {};
   const logo = (doc.logo as Record<string, string | null>) ?? {};
   const colors = (doc.brandColors as Record<string, string>) ?? {};
-  const display = (doc.displayNames as { primary?: string; alsoMention?: string[] }) ?? {};
+  const display =
+    (doc.displayNames as { primary?: string; alsoMention?: string[] }) ?? {};
   return {
     id: String(doc._id),
     legalName: String(doc.legalName ?? ""),
@@ -97,9 +98,10 @@ function toCompanyDTO(doc: Record<string, unknown>): CompanyProfileDTO {
       postalCode: factory.postalCode ?? "",
       country: factory.country ?? "India",
     },
-    phones: ((doc.phones as { label: string; number: string }[]) ?? []).map(
-      (p) => ({ label: p.label, number: p.number }),
-    ),
+    phones: ((doc.phones as { label: string; number: string }[]) ?? []).map((p) => ({
+      label: p.label,
+      number: p.number,
+    })),
     emails: {
       sales: emails.sales ?? "",
       export: emails.export ?? "",
@@ -186,9 +188,7 @@ export async function getCompanyProfile(): Promise<CompanyProfileDTO | null> {
   return toCompanyDTO(doc as Record<string, unknown>);
 }
 
-export async function upsertCompanyProfile(
-  input: z.input<typeof companyProfileSchema>,
-) {
+export async function upsertCompanyProfile(input: z.input<typeof companyProfileSchema>) {
   try {
     const data = companyProfileSchema.parse(input);
     await requireDb();
@@ -211,8 +211,7 @@ export async function upsertCompanyProfile(
       profile: toCompanyDTO(existing.toObject() as Record<string, unknown>),
     };
   } catch (err) {
-    if (isConflictError(err))
-      return { error: "CONFLICT" as const, message: err.message };
+    if (isConflictError(err)) return { error: "CONFLICT" as const, message: err.message };
     throw err;
   }
 }
@@ -229,20 +228,27 @@ function toPersonDTO(doc: Record<string, unknown>): PersonDTO {
     photoId: (doc.photoId as string | null) ?? null,
     photoUrl: (doc.photoUrl as string | null) ?? null,
     sortOrder: Number(doc.sortOrder ?? 0),
+    leadershipSection: ((doc.leadershipSection as string) === "operational"
+      ? "operational"
+      : "board") as "board" | "operational",
     status: (doc.status as PersonDTO["status"]) ?? "draft",
     showOnInvestorPage: Boolean(doc.showOnInvestorPage),
     showOnChairmansPage: Boolean(doc.showOnChairmansPage),
     version: Number(doc.version ?? 1),
-    deletedAt: doc.deletedAt
-      ? new Date(doc.deletedAt as Date).toISOString()
-      : null,
+    deletedAt: doc.deletedAt ? new Date(doc.deletedAt as Date).toISOString() : null,
     createdAt: new Date(doc.createdAt as Date).toISOString(),
     updatedAt: new Date(doc.updatedAt as Date).toISOString(),
   };
 }
 
 async function listSoftDeleted<T>(
-  Model: { find: (...args: never[]) => { sort: (...args: never[]) => { limit: (...args: never[]) => { lean: () => Promise<unknown[]> } } } },
+  Model: {
+    find: (...args: never[]) => {
+      sort: (...args: never[]) => {
+        limit: (...args: never[]) => { lean: () => Promise<unknown[]> };
+      };
+    };
+  },
   toDto: (doc: Record<string, unknown>) => T,
   opts: { includeDeleted?: boolean; q?: string; qFields?: string[] } = {},
 ) {
@@ -256,11 +262,7 @@ async function listSoftDeleted<T>(
     }));
   }
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const rows = await (Model as any)
-    .find(filter)
-    .sort({ _id: -1 })
-    .limit(100)
-    .lean();
+  const rows = await (Model as any).find(filter).sort({ _id: -1 }).limit(100).lean();
   return {
     items: (rows as Record<string, unknown>[]).map((r) => toDto(r)),
   };
@@ -307,7 +309,11 @@ export async function getPersonById(id: string) {
 export async function createPerson(input: z.input<typeof createPersonSchema>) {
   const data = createPersonSchema.parse(input);
   await requireDb();
-  const doc = await Person.create({ ...data, status: data.status ?? "draft", version: 1 });
+  const doc = await Person.create({
+    ...data,
+    status: data.status ?? "draft",
+    version: 1,
+  });
   return toPersonDTO(doc.toObject() as Record<string, unknown>);
 }
 
@@ -336,8 +342,7 @@ export async function updatePerson(
     await existing.save();
     return { person: toPersonDTO(existing.toObject() as Record<string, unknown>) };
   } catch (err) {
-    if (isConflictError(err))
-      return { error: "CONFLICT" as const, message: err.message };
+    if (isConflictError(err)) return { error: "CONFLICT" as const, message: err.message };
     throw err;
   }
 }
@@ -352,6 +357,27 @@ export async function softDeletePerson(id: string) {
   return doc ? toPersonDTO(doc as Record<string, unknown>) : null;
 }
 
+/** Bulk reorder: update sortOrder + leadershipSection for a batch of people at once. */
+export async function reorderPeople(
+  items: { id: string; section: "board" | "operational"; sectionOrder: number }[],
+) {
+  await requireDb();
+  if (!items.length) return { updated: 0 };
+  // Use Promise.all with strict: false to bypass Next.js HMR model caching issues
+  // where the old model schema (without leadershipSection) is still in memory,
+  // causing Mongoose to silently strip the field during a standard update/bulkWrite.
+  await Promise.all(
+    items.map(({ id, section, sectionOrder }) =>
+      Person.updateOne(
+        { _id: id, deletedAt: null },
+        { $set: { leadershipSection: section, sortOrder: sectionOrder } },
+        { strict: false },
+      ),
+    ),
+  );
+  return { updated: items.length };
+}
+
 function toCapacityDTO(doc: Record<string, unknown>): CapacityMetricDTO {
   return {
     id: String(doc._id),
@@ -362,19 +388,13 @@ function toCapacityDTO(doc: Record<string, unknown>): CapacityMetricDTO {
     category: doc.category as CapacityMetricDTO["category"],
     sourceNote: String(doc.sourceNote ?? ""),
     verificationStatus:
-      (doc.verificationStatus as CapacityMetricDTO["verificationStatus"]) ??
-      "draft",
+      (doc.verificationStatus as CapacityMetricDTO["verificationStatus"]) ?? "draft",
     verifiedBy: (doc.verifiedBy as string | null) ?? null,
-    verifiedAt: doc.verifiedAt
-      ? new Date(doc.verifiedAt as Date).toISOString()
-      : null,
-    publishStatus:
-      (doc.publishStatus as CapacityMetricDTO["publishStatus"]) ?? "hidden",
+    verifiedAt: doc.verifiedAt ? new Date(doc.verifiedAt as Date).toISOString() : null,
+    publishStatus: (doc.publishStatus as CapacityMetricDTO["publishStatus"]) ?? "hidden",
     displayOrder: Number(doc.displayOrder ?? 0),
     version: Number(doc.version ?? 1),
-    deletedAt: doc.deletedAt
-      ? new Date(doc.deletedAt as Date).toISOString()
-      : null,
+    deletedAt: doc.deletedAt ? new Date(doc.deletedAt as Date).toISOString() : null,
     createdAt: new Date(doc.createdAt as Date).toISOString(),
     updatedAt: new Date(doc.updatedAt as Date).toISOString(),
   };
@@ -428,8 +448,7 @@ export async function updateCapacityMetric(
     if (!existing) return { error: "NOT_FOUND" as const };
     assertVersionMatch(existing.version, data.version);
 
-    const nextVerification =
-      data.verificationStatus ?? existing.verificationStatus;
+    const nextVerification = data.verificationStatus ?? existing.verificationStatus;
     const nextPublish = data.publishStatus ?? existing.publishStatus;
     if (nextPublish === "published" && nextVerification !== "verified") {
       return {
@@ -449,8 +468,7 @@ export async function updateCapacityMetric(
       metric: toCapacityDTO(existing.toObject() as Record<string, unknown>),
     };
   } catch (err) {
-    if (isConflictError(err))
-      return { error: "CONFLICT" as const, message: err.message };
+    if (isConflictError(err)) return { error: "CONFLICT" as const, message: err.message };
     throw err;
   }
 }
@@ -471,17 +489,12 @@ function toCertDTO(doc: Record<string, unknown>): CertificationDTO {
     name: String(doc.name),
     type: doc.type as CertificationDTO["type"],
     issuer: String(doc.issuer ?? ""),
-    validFrom: doc.validFrom
-      ? new Date(doc.validFrom as Date).toISOString()
-      : null,
+    validFrom: doc.validFrom ? new Date(doc.validFrom as Date).toISOString() : null,
     validTo: doc.validTo ? new Date(doc.validTo as Date).toISOString() : null,
     documentId: (doc.documentId as string | null) ?? null,
-    publishStatus:
-      (doc.publishStatus as CertificationDTO["publishStatus"]) ?? "draft",
+    publishStatus: (doc.publishStatus as CertificationDTO["publishStatus"]) ?? "draft",
     version: Number(doc.version ?? 1),
-    deletedAt: doc.deletedAt
-      ? new Date(doc.deletedAt as Date).toISOString()
-      : null,
+    deletedAt: doc.deletedAt ? new Date(doc.deletedAt as Date).toISOString() : null,
     createdAt: new Date(doc.createdAt as Date).toISOString(),
     updatedAt: new Date(doc.updatedAt as Date).toISOString(),
   };
@@ -542,16 +555,14 @@ export async function updateCertification(
     Object.assign(existing, fields);
     if (validFrom !== undefined)
       existing.validFrom = validFrom ? new Date(validFrom) : null;
-    if (validTo !== undefined)
-      existing.validTo = validTo ? new Date(validTo) : null;
+    if (validTo !== undefined) existing.validTo = validTo ? new Date(validTo) : null;
     existing.version = (existing.version ?? 1) + 1;
     await existing.save();
     return {
       certification: toCertDTO(existing.toObject() as Record<string, unknown>),
     };
   } catch (err) {
-    if (isConflictError(err))
-      return { error: "CONFLICT" as const, message: err.message };
+    if (isConflictError(err)) return { error: "CONFLICT" as const, message: err.message };
     throw err;
   }
 }
@@ -582,9 +593,7 @@ function toSustainDTO(doc: Record<string, unknown>): SustainabilityMetricDTO {
     publishStatus:
       (doc.publishStatus as SustainabilityMetricDTO["publishStatus"]) ?? "hidden",
     version: Number(doc.version ?? 1),
-    deletedAt: doc.deletedAt
-      ? new Date(doc.deletedAt as Date).toISOString()
-      : null,
+    deletedAt: doc.deletedAt ? new Date(doc.deletedAt as Date).toISOString() : null,
     createdAt: new Date(doc.createdAt as Date).toISOString(),
     updatedAt: new Date(doc.updatedAt as Date).toISOString(),
   };
@@ -611,8 +620,7 @@ export async function listPublishedSustainabilityMetrics() {
     .map((r) => toSustainDTO(r as Record<string, unknown>))
     .filter(
       (m) =>
-        m.disclosureTier !== "verified_metric" ||
-        m.verificationStatus === "verified",
+        m.disclosureTier !== "verified_metric" || m.verificationStatus === "verified",
     );
 }
 
@@ -669,8 +677,7 @@ export async function updateSustainabilityMetric(
       metric: toSustainDTO(existing.toObject() as Record<string, unknown>),
     };
   } catch (err) {
-    if (isConflictError(err))
-      return { error: "CONFLICT" as const, message: err.message };
+    if (isConflictError(err)) return { error: "CONFLICT" as const, message: err.message };
     throw err;
   }
 }
@@ -695,13 +702,10 @@ function toLogoDTO(doc: Record<string, unknown>): CustomerLogoDTO {
     listingKind: kind,
     approvedForWebsite: Boolean(doc.approvedForWebsite),
     permissionNote: String(doc.permissionNote ?? ""),
-    publishStatus:
-      (doc.publishStatus as CustomerLogoDTO["publishStatus"]) ?? "draft",
+    publishStatus: (doc.publishStatus as CustomerLogoDTO["publishStatus"]) ?? "draft",
     sortOrder: Number(doc.sortOrder ?? 0),
     version: Number(doc.version ?? 1),
-    deletedAt: doc.deletedAt
-      ? new Date(doc.deletedAt as Date).toISOString()
-      : null,
+    deletedAt: doc.deletedAt ? new Date(doc.deletedAt as Date).toISOString() : null,
     createdAt: new Date(doc.createdAt as Date).toISOString(),
     updatedAt: new Date(doc.updatedAt as Date).toISOString(),
   };
@@ -729,9 +733,7 @@ export async function listPublishedCustomerLogos(
     filter.listingKind =
       opts.listingKind === "potential" ? "potential" : { $ne: "potential" };
   }
-  const rows = await CustomerLogo.find(filter)
-    .sort({ sortOrder: 1 })
-    .lean();
+  const rows = await CustomerLogo.find(filter).sort({ sortOrder: 1 }).lean();
   return rows.map((r) => toLogoDTO(r as Record<string, unknown>));
 }
 
@@ -784,8 +786,7 @@ export async function updateCustomerLogo(
     await existing.save();
     return { logo: toLogoDTO(existing.toObject() as Record<string, unknown>) };
   } catch (err) {
-    if (isConflictError(err))
-      return { error: "CONFLICT" as const, message: err.message };
+    if (isConflictError(err)) return { error: "CONFLICT" as const, message: err.message };
     throw err;
   }
 }
@@ -811,12 +812,9 @@ function toCaseDTO(doc: Record<string, unknown>): CaseStudyDTO {
     imageIds: ((doc.imageIds as string[]) ?? []).map(String),
     productIds: ((doc.productIds as string[]) ?? []).map(String),
     approvedForWebsite: Boolean(doc.approvedForWebsite),
-    publishStatus:
-      (doc.publishStatus as CaseStudyDTO["publishStatus"]) ?? "draft",
+    publishStatus: (doc.publishStatus as CaseStudyDTO["publishStatus"]) ?? "draft",
     version: Number(doc.version ?? 1),
-    deletedAt: doc.deletedAt
-      ? new Date(doc.deletedAt as Date).toISOString()
-      : null,
+    deletedAt: doc.deletedAt ? new Date(doc.deletedAt as Date).toISOString() : null,
     createdAt: new Date(doc.createdAt as Date).toISOString(),
     updatedAt: new Date(doc.updatedAt as Date).toISOString(),
   };
@@ -850,9 +848,7 @@ export async function getCaseStudyById(id: string) {
   return toCaseDTO(doc as Record<string, unknown>);
 }
 
-export async function createCaseStudy(
-  input: z.infer<typeof createCaseStudySchema>,
-) {
+export async function createCaseStudy(input: z.infer<typeof createCaseStudySchema>) {
   const data = createCaseStudySchema.parse(input);
   await requireDb();
   const doc = await CaseStudy.create({ ...data, version: 1 });
@@ -869,8 +865,7 @@ export async function updateCaseStudy(
     const existing = await CaseStudy.findOne({ _id: id, deletedAt: null });
     if (!existing) return { error: "NOT_FOUND" as const };
     assertVersionMatch(existing.version, data.version);
-    const nextApproved =
-      data.approvedForWebsite ?? existing.approvedForWebsite;
+    const nextApproved = data.approvedForWebsite ?? existing.approvedForWebsite;
     const nextPub = data.publishStatus ?? existing.publishStatus;
     if (nextPub === "published" && !nextApproved) {
       return {
@@ -886,8 +881,7 @@ export async function updateCaseStudy(
       caseStudy: toCaseDTO(existing.toObject() as Record<string, unknown>),
     };
   } catch (err) {
-    if (isConflictError(err))
-      return { error: "CONFLICT" as const, message: err.message };
+    if (isConflictError(err)) return { error: "CONFLICT" as const, message: err.message };
     throw err;
   }
 }
@@ -910,13 +904,10 @@ function toTestimonialDTO(doc: Record<string, unknown>): TestimonialDTO {
     authorTitle: String(doc.authorTitle ?? ""),
     company: String(doc.company ?? ""),
     approvedForWebsite: Boolean(doc.approvedForWebsite),
-    publishStatus:
-      (doc.publishStatus as TestimonialDTO["publishStatus"]) ?? "draft",
+    publishStatus: (doc.publishStatus as TestimonialDTO["publishStatus"]) ?? "draft",
     sortOrder: Number(doc.sortOrder ?? 0),
     version: Number(doc.version ?? 1),
-    deletedAt: doc.deletedAt
-      ? new Date(doc.deletedAt as Date).toISOString()
-      : null,
+    deletedAt: doc.deletedAt ? new Date(doc.deletedAt as Date).toISOString() : null,
     createdAt: new Date(doc.createdAt as Date).toISOString(),
     updatedAt: new Date(doc.updatedAt as Date).toISOString(),
   };
@@ -950,9 +941,7 @@ export async function getTestimonialById(id: string) {
   return toTestimonialDTO(doc as Record<string, unknown>);
 }
 
-export async function createTestimonial(
-  input: z.infer<typeof createTestimonialSchema>,
-) {
+export async function createTestimonial(input: z.infer<typeof createTestimonialSchema>) {
   const data = createTestimonialSchema.parse(input);
   await requireDb();
   const doc = await Testimonial.create({ ...data, version: 1 });
@@ -969,8 +958,7 @@ export async function updateTestimonial(
     const existing = await Testimonial.findOne({ _id: id, deletedAt: null });
     if (!existing) return { error: "NOT_FOUND" as const };
     assertVersionMatch(existing.version, data.version);
-    const nextApproved =
-      data.approvedForWebsite ?? existing.approvedForWebsite;
+    const nextApproved = data.approvedForWebsite ?? existing.approvedForWebsite;
     const nextPub = data.publishStatus ?? existing.publishStatus;
     if (nextPub === "published" && !nextApproved) {
       return {
@@ -983,13 +971,10 @@ export async function updateTestimonial(
     existing.version = (existing.version ?? 1) + 1;
     await existing.save();
     return {
-      testimonial: toTestimonialDTO(
-        existing.toObject() as Record<string, unknown>,
-      ),
+      testimonial: toTestimonialDTO(existing.toObject() as Record<string, unknown>),
     };
   } catch (err) {
-    if (isConflictError(err))
-      return { error: "CONFLICT" as const, message: err.message };
+    if (isConflictError(err)) return { error: "CONFLICT" as const, message: err.message };
     throw err;
   }
 }
@@ -1014,18 +999,14 @@ function toExpansionDTO(doc: Record<string, unknown>): ExpansionProjectDTO {
     locationNote: String(doc.locationNote ?? ""),
     expectedStart: String(doc.expectedStart ?? ""),
     expectedCommissioning: String(doc.expectedCommissioning ?? ""),
-    projectCostInr:
-      doc.projectCostInr == null ? null : Number(doc.projectCostInr),
+    projectCostInr: doc.projectCostInr == null ? null : Number(doc.projectCostInr),
     estimatedRevenueInr:
       doc.estimatedRevenueInr == null ? null : Number(doc.estimatedRevenueInr),
     publicDisclosureApproved: Boolean(doc.publicDisclosureApproved),
-    publishStatus:
-      (doc.publishStatus as ExpansionProjectDTO["publishStatus"]) ?? "draft",
+    publishStatus: (doc.publishStatus as ExpansionProjectDTO["publishStatus"]) ?? "draft",
     sortOrder: Number(doc.sortOrder ?? 0),
     version: Number(doc.version ?? 1),
-    deletedAt: doc.deletedAt
-      ? new Date(doc.deletedAt as Date).toISOString()
-      : null,
+    deletedAt: doc.deletedAt ? new Date(doc.deletedAt as Date).toISOString() : null,
     createdAt: new Date(doc.createdAt as Date).toISOString(),
     updatedAt: new Date(doc.updatedAt as Date).toISOString(),
   };
@@ -1109,8 +1090,7 @@ export async function updateExpansionProject(
       project: toExpansionDTO(existing.toObject() as Record<string, unknown>),
     };
   } catch (err) {
-    if (isConflictError(err))
-      return { error: "CONFLICT" as const, message: err.message };
+    if (isConflictError(err)) return { error: "CONFLICT" as const, message: err.message };
     throw err;
   }
 }

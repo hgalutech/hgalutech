@@ -15,6 +15,11 @@ const personSchema = new Schema(
     photoId: { type: String, default: null },
     photoUrl: { type: String, default: null },
     sortOrder: { type: Number, default: 0 },
+    leadershipSection: {
+      type: String,
+      enum: ["board", "operational"],
+      default: "board",
+    },
     status: {
       type: String,
       enum: ["draft", "published"],

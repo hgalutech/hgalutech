@@ -76,10 +76,7 @@ export async function createPersonApi(body: Record<string, unknown>) {
   return parse<PersonDTO>(res);
 }
 
-export async function updatePersonApi(
-  id: string,
-  body: Record<string, unknown>,
-) {
+export async function updatePersonApi(id: string, body: Record<string, unknown>) {
   const res = await fetch(`/api/v1/corporate/people/${id}`, {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
@@ -95,12 +92,21 @@ export async function deletePersonApi(id: string) {
   return parse<PersonDTO>(res);
 }
 
+export async function reorderPeopleApi(
+  items: { id: string; section: "board" | "operational"; sectionOrder: number }[],
+) {
+  const res = await fetch("/api/v1/corporate/people/reorder", {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ items }),
+  });
+  return parse<{ updated: number }>(res);
+}
+
 /* ── Capacity metrics ─────────────────────────────────────── */
 
 export async function fetchCapacityMetricsApi(params?: ListParams) {
-  const res = await fetch(
-    `/api/v1/corporate/capacity-metrics${listQuery(params)}`,
-  );
+  const res = await fetch(`/api/v1/corporate/capacity-metrics${listQuery(params)}`);
   return parse<{ items: CapacityMetricDTO[] }>(res);
 }
 
@@ -118,10 +124,7 @@ export async function createCapacityMetricApi(body: Record<string, unknown>) {
   return parse<CapacityMetricDTO>(res);
 }
 
-export async function updateCapacityMetricApi(
-  id: string,
-  body: Record<string, unknown>,
-) {
+export async function updateCapacityMetricApi(id: string, body: Record<string, unknown>) {
   const res = await fetch(`/api/v1/corporate/capacity-metrics/${id}`, {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
@@ -140,9 +143,7 @@ export async function deleteCapacityMetricApi(id: string) {
 /* ── Certifications ───────────────────────────────────────── */
 
 export async function fetchCertificationsApi(params?: ListParams) {
-  const res = await fetch(
-    `/api/v1/corporate/certifications${listQuery(params)}`,
-  );
+  const res = await fetch(`/api/v1/corporate/certifications${listQuery(params)}`);
   return parse<{ items: CertificationDTO[] }>(res);
 }
 
@@ -160,10 +161,7 @@ export async function createCertificationApi(body: Record<string, unknown>) {
   return parse<CertificationDTO>(res);
 }
 
-export async function updateCertificationApi(
-  id: string,
-  body: Record<string, unknown>,
-) {
+export async function updateCertificationApi(id: string, body: Record<string, unknown>) {
   const res = await fetch(`/api/v1/corporate/certifications/${id}`, {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
@@ -182,9 +180,7 @@ export async function deleteCertificationApi(id: string) {
 /* ── Sustainability ───────────────────────────────────────── */
 
 export async function fetchSustainabilityMetricsApi(params?: ListParams) {
-  const res = await fetch(
-    `/api/v1/corporate/sustainability${listQuery(params)}`,
-  );
+  const res = await fetch(`/api/v1/corporate/sustainability${listQuery(params)}`);
   return parse<{ items: SustainabilityMetricDTO[] }>(res);
 }
 
@@ -193,9 +189,7 @@ export async function fetchSustainabilityMetricApi(id: string) {
   return parse<SustainabilityMetricDTO>(res);
 }
 
-export async function createSustainabilityMetricApi(
-  body: Record<string, unknown>,
-) {
+export async function createSustainabilityMetricApi(body: Record<string, unknown>) {
   const res = await fetch("/api/v1/corporate/sustainability", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -226,9 +220,7 @@ export async function deleteSustainabilityMetricApi(id: string) {
 /* ── Customer logos ───────────────────────────────────────── */
 
 export async function fetchCustomerLogosApi(params?: ListParams) {
-  const res = await fetch(
-    `/api/v1/corporate/customer-logos${listQuery(params)}`,
-  );
+  const res = await fetch(`/api/v1/corporate/customer-logos${listQuery(params)}`);
   return parse<{ items: CustomerLogoDTO[] }>(res);
 }
 
@@ -246,10 +238,7 @@ export async function createCustomerLogoApi(body: Record<string, unknown>) {
   return parse<CustomerLogoDTO>(res);
 }
 
-export async function updateCustomerLogoApi(
-  id: string,
-  body: Record<string, unknown>,
-) {
+export async function updateCustomerLogoApi(id: string, body: Record<string, unknown>) {
   const res = await fetch(`/api/v1/corporate/customer-logos/${id}`, {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
@@ -286,10 +275,7 @@ export async function createCaseStudyApi(body: Record<string, unknown>) {
   return parse<CaseStudyDTO>(res);
 }
 
-export async function updateCaseStudyApi(
-  id: string,
-  body: Record<string, unknown>,
-) {
+export async function updateCaseStudyApi(id: string, body: Record<string, unknown>) {
   const res = await fetch(`/api/v1/corporate/case-studies/${id}`, {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
@@ -308,9 +294,7 @@ export async function deleteCaseStudyApi(id: string) {
 /* ── Testimonials ─────────────────────────────────────────── */
 
 export async function fetchTestimonialsApi(params?: ListParams) {
-  const res = await fetch(
-    `/api/v1/corporate/testimonials${listQuery(params)}`,
-  );
+  const res = await fetch(`/api/v1/corporate/testimonials${listQuery(params)}`);
   return parse<{ items: TestimonialDTO[] }>(res);
 }
 
@@ -328,10 +312,7 @@ export async function createTestimonialApi(body: Record<string, unknown>) {
   return parse<TestimonialDTO>(res);
 }
 
-export async function updateTestimonialApi(
-  id: string,
-  body: Record<string, unknown>,
-) {
+export async function updateTestimonialApi(id: string, body: Record<string, unknown>) {
   const res = await fetch(`/api/v1/corporate/testimonials/${id}`, {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },

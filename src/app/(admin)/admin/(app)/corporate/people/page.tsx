@@ -1,5 +1,5 @@
-import { CorporatePeopleList } from "@/features/admin-desk/components/corporate-people-list";
+import { CorporatePeopleBoard } from "@/features/admin-desk/components/corporate-people-board";
 
 export default function Page() {
-  return <CorporatePeopleList />;
+  return <CorporatePeopleBoard />;
 }

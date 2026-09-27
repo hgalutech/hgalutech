@@ -59,9 +59,7 @@ export function CorporateTestimonialsEditor({
   const isNew = testimonialId === "new";
   const [id, setId] = useState<string | null>(isNew ? null : testimonialId);
   const [version, setVersion] = useState(1);
-  const [publishStatus, setPublishStatus] = useState<"draft" | "published">(
-    "draft",
-  );
+  const [publishStatus, setPublishStatus] = useState<"draft" | "published">("draft");
   const [draft, setDraft] = useState<Draft>(emptyDraft);
   const [baseline, setBaseline] = useState("");
   const [loading, setLoading] = useState(!isNew);
@@ -69,14 +67,14 @@ export function CorporateTestimonialsEditor({
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const dirty = useMemo(
-    () => JSON.stringify(draft) !== baseline,
-    [draft, baseline],
-  );
-  const canPublish =
-    Boolean(draft.quoteEn.trim()) && Boolean(draft.authorName.trim());
-  const patch = (partial: Partial<Draft>) =>
-    setDraft((d) => ({ ...d, ...partial }));
+  const dirty = useMemo(() => JSON.stringify(draft) !== baseline, [draft, baseline]);
+  const canPublish = Boolean(draft.quoteEn.trim()) && Boolean(draft.authorName.trim());
+  const canPublishBlocked = !draft.approvedForWebsite
+    ? "Mark \u201cApproved for website\u201d before publish."
+    : !draft.quoteEn.trim() || !draft.authorName.trim()
+      ? "Add quote and author before publish."
+      : undefined;
+  const patch = (partial: Partial<Draft>) => setDraft((d) => ({ ...d, ...partial }));
 
   const load = useCallback(async () => {
     if (isNew) {
@@ -95,9 +93,7 @@ export function CorporateTestimonialsEditor({
       setPublishStatus(t.publishStatus);
       setId(t.id);
     } catch (err) {
-      setError(
-        err instanceof Error ? err.message : "Failed to load testimonial",
-      );
+      setError(err instanceof Error ? err.message : "Failed to load testimonial");
     } finally {
       setLoading(false);
     }
@@ -120,14 +116,17 @@ export function CorporateTestimonialsEditor({
   }
 
   async function persist(publish?: "draft" | "published") {
+    if (publish === "published" && !draft.approvedForWebsite) {
+      setError("Mark \u201cApproved for website\u201d before publish.");
+      return;
+    }
     setSaving(true);
     setMessage(null);
     setError(null);
     try {
+      // Always send full payload — never status-only (Zod default leak bug).
       if (!id) {
-        const created = await createTestimonialApi(
-          payload(publish ?? "draft"),
-        );
+        const created = await createTestimonialApi(payload(publish ?? "draft"));
         setId(created.id);
         setVersion(created.version);
         setPublishStatus(created.publishStatus);
@@ -135,42 +134,19 @@ export function CorporateTestimonialsEditor({
         setDraft(d);
         setBaseline(JSON.stringify(d));
         router.replace(`/admin/corporate/testimonials/${created.id}`);
-        setMessage(
-          publish === "published" ? "Published." : "Testimonial created.",
-        );
+        setMessage(publish === "published" ? "Published." : "Testimonial created.");
         return;
       }
-      let currentVersion = version;
-      if (dirty) {
-        const updated = await updateTestimonialApi(id, {
-          ...payload(),
-          version: currentVersion,
-        });
-        currentVersion = updated.version;
-      }
-      if (publish === "published") {
-        const published = await updateTestimonialApi(id, {
-          publishStatus: "published",
-          version: currentVersion,
-        });
-        setVersion(published.version);
-        setPublishStatus(published.publishStatus);
-        const d = fromTestimonial(published);
-        setDraft(d);
-        setBaseline(JSON.stringify(d));
-        setMessage("Published.");
-      } else {
-        const updated = await updateTestimonialApi(id, {
-          ...payload(),
-          version: currentVersion,
-        });
-        setVersion(updated.version);
-        setPublishStatus(updated.publishStatus);
-        const d = fromTestimonial(updated);
-        setDraft(d);
-        setBaseline(JSON.stringify(d));
-        setMessage("Draft saved.");
-      }
+      const updated = await updateTestimonialApi(id, {
+        ...payload(publish),
+        version,
+      });
+      setVersion(updated.version);
+      setPublishStatus(updated.publishStatus);
+      const d = fromTestimonial(updated);
+      setDraft(d);
+      setBaseline(JSON.stringify(d));
+      setMessage(publish === "published" ? "Published." : "Draft saved.");
     } catch (err) {
       if (err instanceof ApiClientError && err.code === "CONFLICT") {
         setError("Someone else saved first. Reload and try again.");
@@ -183,22 +159,15 @@ export function CorporateTestimonialsEditor({
   }
 
   if (loading) {
-    return (
-      <p className="text-muted-foreground text-sm">Loading testimonial…</p>
-    );
+    return <p className="text-muted-foreground text-sm">Loading testimonial…</p>;
   }
 
   return (
     <div className="mx-auto flex w-full max-w-[52rem] flex-col pb-2">
       <header className="mb-4 flex flex-col gap-2">
-        <DeskBackLink
-          href="/admin/corporate/testimonials"
-          label="Back to testimonials"
-        />
+        <DeskBackLink href="/admin/corporate/testimonials" label="Back to testimonials" />
         <h1 className="font-display text-xl font-semibold tracking-tight">
-          {isNew && !id
-            ? "New testimonial"
-            : draft.authorName || "Testimonial"}
+          {isNew && !id ? "New testimonial" : draft.authorName || "Testimonial"}
         </h1>
       </header>
 
@@ -206,10 +175,7 @@ export function CorporateTestimonialsEditor({
         <div className="grid gap-2.5 p-3 sm:grid-cols-2">
           <CorporateField label="Quote" className="sm:col-span-2">
             <textarea
-              className={cn(
-                corporateInputClass,
-                "h-auto min-h-[80px] resize-y py-2",
-              )}
+              className={cn(corporateInputClass, "h-auto min-h-[80px] resize-y py-2")}
               value={draft.quoteEn}
               onChange={(e) => patch({ quoteEn: e.target.value })}
               rows={3}
@@ -241,9 +207,7 @@ export function CorporateTestimonialsEditor({
               type="number"
               className={corporateInputClass}
               value={draft.sortOrder}
-              onChange={(e) =>
-                patch({ sortOrder: Number(e.target.value) || 0 })
-              }
+              onChange={(e) => patch({ sortOrder: Number(e.target.value) || 0 })}
             />
           </CorporateField>
           <div className="sm:col-span-2">
@@ -281,10 +245,8 @@ export function CorporateTestimonialsEditor({
       <DeskSaveBar
         saving={saving}
         dirty={dirty || !id}
-        canPublish={canPublish}
-        publishBlockedReason={
-          canPublish ? undefined : "Add quote and author before publish."
-        }
+        canPublish={canPublish && !canPublishBlocked}
+        publishBlockedReason={canPublishBlocked}
         statusLabel={publishStatus}
         onSave={() => void persist()}
         onPublish={() => void persist("published")}

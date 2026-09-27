@@ -56,9 +56,7 @@ export const companyProfileSchema = z.object({
   gst: z.string().default(""),
   registeredOffice: addressSchema,
   factoryAddress: addressSchema,
-  phones: z
-    .array(z.object({ label: z.string(), number: z.string() }))
-    .default([]),
+  phones: z.array(z.object({ label: z.string(), number: z.string() })).default([]),
   emails: z.object({
     sales: z.string().default(""),
     export: z.string().default(""),
@@ -110,6 +108,7 @@ export const createPersonSchema = z.object({
   photoId: z.string().nullable().optional(),
   photoUrl: z.string().nullable().optional(),
   sortOrder: z.number().int().default(0),
+  leadershipSection: z.enum(["board", "operational"]).optional().default("board"),
   status: z.enum(["draft", "published"]).optional(),
   showOnInvestorPage: z.boolean().optional().default(false),
   showOnChairmansPage: z.boolean().optional().default(false),
@@ -127,6 +126,7 @@ export const updatePersonSchema = z.object({
   photoId: z.string().nullable().optional(),
   photoUrl: z.string().nullable().optional(),
   sortOrder: z.number().int().optional(),
+  leadershipSection: z.enum(["board", "operational"]).optional(),
   status: z.enum(["draft", "published"]).optional(),
   showOnInvestorPage: z.boolean().optional(),
   showOnChairmansPage: z.boolean().optional(),
@@ -155,9 +155,21 @@ export const createCapacityMetricSchema = z.object({
   displayOrder: z.number().int().default(0),
 });
 
-export const updateCapacityMetricSchema = createCapacityMetricSchema
-  .partial()
-  .extend({ version: z.number().int() });
+/** No Zod defaults — a publish-only PATCH must not inject verificationStatus:"draft" and block publish. */
+export const updateCapacityMetricSchema = z.object({
+  key: z.string().min(1).optional(),
+  label: localizedStringSchema.optional(),
+  value: z.union([z.string(), z.number()]).transform(String).optional(),
+  unit: z.string().optional(),
+  category: z
+    .enum(["extrusion", "billet", "ingot", "melting", "press", "dimension", "commercial"])
+    .optional(),
+  sourceNote: z.string().optional(),
+  verificationStatus: z.enum(["draft", "needs_verification", "verified"]).optional(),
+  publishStatus: z.enum(["hidden", "published"]).optional(),
+  displayOrder: z.number().int().optional(),
+  version: z.number().int(),
+});
 
 export const createCertificationSchema = z.object({
   name: z.string().min(1),
@@ -169,9 +181,19 @@ export const createCertificationSchema = z.object({
   publishStatus: z.enum(["draft", "published"]).default("draft"),
 });
 
-export const updateCertificationSchema = createCertificationSchema
-  .partial()
-  .extend({ version: z.number().int() });
+/** No Zod defaults — leaked publishStatus:"draft" from .partial() would silently downgrade on empty PATCHes. */
+export const updateCertificationSchema = z.object({
+  name: z.string().min(1).optional(),
+  type: z
+    .enum(["iso", "quality_policy", "test_certificate_template", "other"])
+    .optional(),
+  issuer: z.string().optional(),
+  validFrom: z.string().nullable().optional(),
+  validTo: z.string().nullable().optional(),
+  documentId: z.string().nullable().optional(),
+  publishStatus: z.enum(["draft", "published"]).optional(),
+  version: z.number().int(),
+});
 
 export const createSustainabilityMetricSchema = z.object({
   key: z.string().min(1),
@@ -185,10 +207,19 @@ export const createSustainabilityMetricSchema = z.object({
   publishStatus: z.enum(["hidden", "published"]).default("hidden"),
 });
 
-export const updateSustainabilityMetricSchema =
-  createSustainabilityMetricSchema.partial().extend({
-    version: z.number().int(),
-  });
+/** No Zod defaults — a publish-only PATCH must not inject verificationStatus:"draft" and block verified_metric publish. */
+export const updateSustainabilityMetricSchema = z.object({
+  key: z.string().min(1).optional(),
+  label: localizedStringSchema.optional(),
+  value: z.string().nullable().optional(),
+  unit: z.string().optional(),
+  disclosureTier: z.enum(["verified_metric", "initiative", "commitment"]).optional(),
+  evidenceMediaIds: z.array(z.string()).optional(),
+  methodologyNote: z.string().optional(),
+  verificationStatus: z.enum(["draft", "verified"]).optional(),
+  publishStatus: z.enum(["hidden", "published"]).optional(),
+  version: z.number().int(),
+});
 
 export const createCustomerLogoSchema = z.object({
   name: z.string().min(1),
@@ -226,7 +257,17 @@ export const createCaseStudySchema = z.object({
   publishStatus: z.enum(["draft", "published"]).default("draft"),
 });
 
-export const updateCaseStudySchema = createCaseStudySchema.partial().extend({
+/** No Zod defaults on approvedForWebsite — a publish-only PATCH must not inject false. */
+export const updateCaseStudySchema = z.object({
+  title: localizedStringSchema.optional(),
+  slug: z.string().min(1).optional(),
+  industry: z.string().optional(),
+  region: z.string().optional(),
+  summary: z.object({ en: z.string() }).optional(),
+  imageIds: z.array(z.string()).optional(),
+  productIds: z.array(z.string()).optional(),
+  approvedForWebsite: z.boolean().optional(),
+  publishStatus: z.enum(["draft", "published"]).optional(),
   version: z.number().int(),
 });
 
@@ -240,9 +281,17 @@ export const createTestimonialSchema = z.object({
   sortOrder: z.number().int().default(0),
 });
 
-export const updateTestimonialSchema = createTestimonialSchema
-  .partial()
-  .extend({ version: z.number().int() });
+/** No Zod defaults on approvedForWebsite — a publish-only PATCH must not inject false. */
+export const updateTestimonialSchema = z.object({
+  quote: localizedStringSchema.optional(),
+  authorName: z.string().min(1).optional(),
+  authorTitle: z.string().optional(),
+  company: z.string().optional(),
+  approvedForWebsite: z.boolean().optional(),
+  publishStatus: z.enum(["draft", "published"]).optional(),
+  sortOrder: z.number().int().optional(),
+  version: z.number().int(),
+});
 
 export const createExpansionProjectSchema = z.object({
   title: localizedStringSchema,
@@ -259,6 +308,19 @@ export const createExpansionProjectSchema = z.object({
   sortOrder: z.number().int().optional().default(0),
 });
 
-export const updateExpansionProjectSchema = createExpansionProjectSchema
-  .partial()
-  .extend({ version: z.number().int() });
+/** No Zod defaults — leaked publishStatus:"draft" from .partial() would silently downgrade on empty PATCHes. */
+export const updateExpansionProjectSchema = z.object({
+  title: localizedStringSchema.optional(),
+  slug: z.string().min(1).optional(),
+  status: z.enum(["confirmed", "proposed", "planned"]).optional(),
+  description: z.object({ en: z.string() }).optional(),
+  locationNote: z.string().optional(),
+  expectedStart: z.string().optional(),
+  expectedCommissioning: z.string().optional(),
+  projectCostInr: z.number().nullable().optional(),
+  estimatedRevenueInr: z.number().nullable().optional(),
+  publicDisclosureApproved: z.boolean().optional(),
+  publishStatus: z.enum(["draft", "published"]).optional(),
+  sortOrder: z.number().int().optional(),
+  version: z.number().int(),
+});

@@ -49,6 +49,7 @@ export {
   listPublishedTestimonials,
   listSustainabilityMetrics,
   listTestimonials,
+  reorderPeople,
   softDeleteCapacityMetric,
   softDeleteCaseStudy,
   softDeleteCertification,
