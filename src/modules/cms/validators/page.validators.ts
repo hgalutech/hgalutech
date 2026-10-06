@@ -1,11 +1,6 @@
 import { z } from "zod";
 
-export const appearanceSchema = z.enum([
-  "default",
-  "inverted",
-  "tinted",
-  "compact",
-]);
+export const appearanceSchema = z.enum(["default", "inverted", "tinted", "compact"]);
 
 export type BlockAppearance = z.infer<typeof appearanceSchema>;
 
@@ -19,9 +14,7 @@ export const heroBlockDataSchema = z.object({
         eyebrow: z.string(),
         title: z.string(),
         subtitle: z.string(),
-        primaryCta: z
-          .object({ label: z.string(), href: z.string() })
-          .optional(),
+        primaryCta: z.object({ label: z.string(), href: z.string() }).optional(),
         video: z
           .object({
             src: z.string().min(1),
@@ -36,9 +29,7 @@ export const heroBlockDataSchema = z.object({
     )
     .min(1),
   /** @deprecated Prefer per-slide primaryCta; kept for legacy drafts */
-  primaryCta: z
-    .object({ label: z.string(), href: z.string() })
-    .optional(),
+  primaryCta: z.object({ label: z.string(), href: z.string() }).optional(),
   /** @deprecated Prefer per-slide video */
   secondaryCta: z.object({ label: z.string() }).optional(),
   /** @deprecated Prefer per-slide video.src */
@@ -125,9 +116,7 @@ export const marketsBlockDataSchema = z.object({
   title: z.string().default("Markets we serve"),
   description: z
     .string()
-    .default(
-      "Application sectors shaped by extrusion, billet and remelt demand.",
-    ),
+    .default("Application sectors for ingots and steel-deoxidation forms."),
 });
 
 export const jointVenturesBlockDataSchema = z.object({
@@ -353,127 +342,126 @@ export const redirectSchema = z.object({
   active: z.boolean().default(true),
 });
 
-export const BLOCK_PICKER: { type: BlockType; label: string; description: string }[] =
-  [
-    { type: "hero", label: "Hero", description: "Full-bleed carousel with CTAs" },
-    {
-      type: "capability",
-      label: "Capability & stats",
-      description: "Company pitch with animated numbers",
-    },
-    {
-      type: "products",
-      label: "Products grid",
-      description: "Product cards linking to catalog pages",
-    },
-    {
-      type: "mission",
-      label: "Mission / video",
-      description: "Statement over a full-bleed image",
-    },
-    {
-      type: "cta-banner",
-      label: "Inquire banner",
-      description: "Mid-page call to action",
-    },
-    {
-      type: "testimonials",
-      label: "Testimonials",
-      description: "Partner quotes carousel",
-    },
-    {
-      type: "customers",
-      label: "Customers",
-      description: "Logo / name strip",
-    },
-    {
-      type: "joint-ventures",
-      label: "Joint ventures",
-      description: "Partnership highlights",
-    },
-    {
-      type: "careers-teaser",
-      label: "Careers teaser",
-      description: "Employer brand section",
-    },
-    { type: "faq", label: "FAQ", description: "Accordion questions" },
-    {
-      type: "page-intro",
-      label: "Page intro",
-      description: "Eyebrow, title, body and optional CTA",
-    },
-    {
-      type: "pillar-list",
-      label: "Pillar list",
-      description: "Intro plus titled narrative pillars",
-    },
-    {
-      type: "timeline",
-      label: "Timeline",
-      description: "Yeared milestones narrative",
-    },
-    {
-      type: "numbered-steps",
-      label: "Numbered steps",
-      description: "Ordered process / release rail",
-    },
-    {
-      type: "resource-list",
-      label: "Resource list",
-      description: "Requestable technical packs",
-    },
-    {
-      type: "industry-list",
-      label: "Industry list",
-      description: "Markets and applications",
-    },
-    { type: "stats", label: "Capacity stats", description: "Verified capacity metrics" },
-    {
-      type: "leadership-grid",
-      label: "Leadership",
-      description: "Published people grid",
-    },
-    {
-      type: "company-facts",
-      label: "Company facts",
-      description: "Company profile snapshot",
-    },
-    {
-      type: "cert-grid",
-      label: "Certifications",
-      description: "Published certifications",
-    },
-    {
-      type: "sustainability-metrics",
-      label: "Sustainability",
-      description: "Tiered sustainability metrics",
-    },
-    {
-      type: "logo-strip",
-      label: "Customer logos",
-      description: "Approved customer logos",
-    },
-    {
-      type: "gallery",
-      label: "Gallery / customers",
-      description: "Customer proof gallery",
-    },
-    {
-      type: "expansion-roadmap",
-      label: "Expansion roadmap",
-      description: "Published expansion projects",
-    },
-    {
-      type: "upcoming-products",
-      label: "Upcoming products",
-      description: "Coming-soon catalogue strip",
-    },
-    {
-      type: "markets",
-      label: "Markets we serve",
-      description: "Industry segments grid",
-    },
-  ];
+export const BLOCK_PICKER: { type: BlockType; label: string; description: string }[] = [
+  { type: "hero", label: "Hero", description: "Full-bleed carousel with CTAs" },
+  {
+    type: "capability",
+    label: "Capability & stats",
+    description: "Company pitch with animated numbers",
+  },
+  {
+    type: "products",
+    label: "Products grid",
+    description: "Product cards linking to catalog pages",
+  },
+  {
+    type: "mission",
+    label: "Mission / video",
+    description: "Statement over a full-bleed image",
+  },
+  {
+    type: "cta-banner",
+    label: "Inquire banner",
+    description: "Mid-page call to action",
+  },
+  {
+    type: "testimonials",
+    label: "Testimonials",
+    description: "Partner quotes carousel",
+  },
+  {
+    type: "customers",
+    label: "Customers",
+    description: "Logo / name strip",
+  },
+  {
+    type: "joint-ventures",
+    label: "Joint ventures",
+    description: "Partnership highlights",
+  },
+  {
+    type: "careers-teaser",
+    label: "Careers teaser",
+    description: "Employer brand section",
+  },
+  { type: "faq", label: "FAQ", description: "Accordion questions" },
+  {
+    type: "page-intro",
+    label: "Page intro",
+    description: "Eyebrow, title, body and optional CTA",
+  },
+  {
+    type: "pillar-list",
+    label: "Pillar list",
+    description: "Intro plus titled narrative pillars",
+  },
+  {
+    type: "timeline",
+    label: "Timeline",
+    description: "Yeared milestones narrative",
+  },
+  {
+    type: "numbered-steps",
+    label: "Numbered steps",
+    description: "Ordered process / release rail",
+  },
+  {
+    type: "resource-list",
+    label: "Resource list",
+    description: "Requestable technical packs",
+  },
+  {
+    type: "industry-list",
+    label: "Industry list",
+    description: "Markets and applications",
+  },
+  { type: "stats", label: "Capacity stats", description: "Verified capacity metrics" },
+  {
+    type: "leadership-grid",
+    label: "Leadership",
+    description: "Published people grid",
+  },
+  {
+    type: "company-facts",
+    label: "Company facts",
+    description: "Company profile snapshot",
+  },
+  {
+    type: "cert-grid",
+    label: "Certifications",
+    description: "Published certifications",
+  },
+  {
+    type: "sustainability-metrics",
+    label: "Sustainability",
+    description: "Tiered sustainability metrics",
+  },
+  {
+    type: "logo-strip",
+    label: "Customer logos",
+    description: "Approved customer logos",
+  },
+  {
+    type: "gallery",
+    label: "Gallery / customers",
+    description: "Customer proof gallery",
+  },
+  {
+    type: "expansion-roadmap",
+    label: "Expansion roadmap",
+    description: "Published expansion projects",
+  },
+  {
+    type: "upcoming-products",
+    label: "Upcoming products",
+    description: "Coming-soon catalogue strip",
+  },
+  {
+    type: "markets",
+    label: "Markets we serve",
+    description: "Industry segments grid",
+  },
+];
 
 export function defaultBlockData(type: BlockType): unknown {
   switch (type) {
@@ -585,7 +573,7 @@ export function defaultBlockData(type: BlockType): unknown {
           {
             year: "2018",
             title: "Company incorporation",
-            body: "HG Aluminium Smelters Limited established to build secondary aluminium and extrusion capability in Gujarat.",
+            body: "HG Alutech established to build secondary aluminium and extrusion capability in Gujarat.",
           },
           {
             year: "Plant",
@@ -670,21 +658,13 @@ export function defaultBlockData(type: BlockType): unknown {
             label: "Infrastructure & construction",
             description:
               "Architectural façades, industrial sections and scaffolding systems.",
-            applications: [
-              "Façade profiles",
-              "Window & door sections",
-              "Metro & infra",
-            ],
+            applications: ["Façade profiles", "Window & door sections", "Metro & infra"],
             productHref: "products/category/extrusion-profiles",
           },
           {
             label: "Cable & electrical",
-            description:
-              "Alloy and remelt feed for conductors and cable manufacturers.",
-            applications: [
-              "Conductor alloys",
-              "Transmission-related aluminium",
-            ],
+            description: "Alloy and remelt feed for conductors and cable manufacturers.",
+            applications: ["Conductor alloys", "Transmission-related aluminium"],
             productHref: "products/category/ingots-alloys",
           },
         ],
@@ -693,8 +673,7 @@ export function defaultBlockData(type: BlockType): unknown {
       return {
         eyebrow: "Markets",
         title: "Markets we serve",
-        description:
-          "Application sectors shaped by extrusion, billet and remelt demand.",
+        description: "Application sectors for ingots and steel-deoxidation forms.",
       };
     case "stats":
     case "leadership-grid":
@@ -709,8 +688,7 @@ export function defaultBlockData(type: BlockType): unknown {
       return {
         eyebrow: "Pipeline",
         title: "Upcoming products",
-        description:
-          "Coming soon from HG — register interest for early allocation.",
+        description: "Coming soon from HG — register interest for early allocation.",
       };
   }
 }

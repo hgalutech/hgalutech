@@ -22,13 +22,7 @@ import { listCategoriesFlat } from "@/modules/catalog";
 export type PublicSocialLink = {
   id: string;
   platform:
-    | "linkedin"
-    | "facebook"
-    | "instagram"
-    | "youtube"
-    | "x"
-    | "whatsapp"
-    | "other";
+    "linkedin" | "facebook" | "instagram" | "youtube" | "x" | "whatsapp" | "other";
   url: string;
   label?: string;
 };
@@ -129,10 +123,7 @@ const COMPANY_SECTIONS: { title: string; hrefs: string[] }[] = [
 ];
 
 /** Nav copy must stay scannable — Stripe/Linear pattern, not CMS essays. */
-function navSnippet(
-  text: string | null | undefined,
-  max = 64,
-): string | undefined {
+function navSnippet(text: string | null | undefined, max = 64): string | undefined {
   const t = text?.replace(/\s+/g, " ").trim();
   if (!t) return undefined;
   if (t.length <= max) return t;
@@ -147,17 +138,24 @@ function navSnippet(
  * - Present / upcoming SKUs are capped in the mega only (not footer).
  * - Footer = durable Products (categories) + Company + Support.
  */
-export async function resolvePublicNav(
-  locale = "en",
-): Promise<PublicNavResolved> {
+export async function resolvePublicNav(locale = "en"): Promise<PublicNavResolved> {
   const companySlugs = companyNavAllowlist.map((i) => i.href);
   const productPageSlugs = productNavAllowlist.map((i) => i.href);
   const primarySlugs = primaryNavAllowlist.map((i) => i.href);
   const footerCompanySlugs = footerCompanyAllowlist.map((i) => i.href);
   const utilitySlugs = footerUtilityAllowlist.map((i) => i.href);
 
-  const [live, present, upcoming, company, publishedCats, cmsFooterProducts, cmsFooterCompany, cmsFooterSupport, cmsPrimary] =
-    await Promise.all([
+  const [
+    live,
+    present,
+    upcoming,
+    company,
+    publishedCats,
+    cmsFooterProducts,
+    cmsFooterCompany,
+    cmsFooterSupport,
+    cmsPrimary,
+  ] = await Promise.all([
     publishedSlugs(
       [
         ...new Set([
@@ -272,9 +270,7 @@ export async function resolvePublicNav(
   const office = company?.registeredOffice ?? company?.factoryAddress;
   const phone = company?.phones?.[0]?.number ?? footerContactFallback.phone;
   const email = company?.emails?.sales || footerContactFallback.email;
-  const address = office
-    ? formatAddress(office)
-    : footerContactFallback.address;
+  const address = office ? formatAddress(office) : footerContactFallback.address;
   const mapsQuery = encodeURIComponent(address);
 
   const footerContact = {
@@ -337,13 +333,9 @@ export async function resolvePublicNav(
     organizationName:
       company?.legalName?.trim() ||
       company?.displayNames?.primary?.trim() ||
-      "HG Aluminium Smelters",
+      "HG Alutech",
     socialLinks,
-    footerQuickLinks: [
-      ...footer.products,
-      ...footer.company,
-      ...footer.support,
-    ],
+    footerQuickLinks: [...footer.products, ...footer.company, ...footer.support],
     footerContact,
   };
 }

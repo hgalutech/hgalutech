@@ -6,10 +6,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { DeskBackLink } from "@/features/admin-desk/components/desk-back-link";
 import { ApiClientError } from "@/features/admin-desk/lib/api";
-import {
-  fetchLeadApi,
-  updateLeadStatusApi,
-} from "@/features/admin-desk/lib/leads-api";
+import { fetchLeadApi, updateLeadStatusApi } from "@/features/admin-desk/lib/leads-api";
 import type { EnquiryDTO, EnquiryStatus } from "@/modules/enquiries/browser";
 import { cn } from "@/lib/utils";
 
@@ -36,21 +33,19 @@ export function LeadDetail({ id }: { id: string }) {
   const load = useCallback(async () => {
     setLoading(true);
     setError(null);
-      try {
-        const data = await fetchLeadApi(id);
-        setLead(data);
-        if (data.status === "new") {
-          try {
-            const updated = await updateLeadStatusApi(id, "read");
-            setLead(updated);
-          } catch {
-            /* viewers can read but not update status */
-          }
+    try {
+      const data = await fetchLeadApi(id);
+      setLead(data);
+      if (data.status === "new") {
+        try {
+          const updated = await updateLeadStatusApi(id, "read");
+          setLead(updated);
+        } catch {
+          /* viewers can read but not update status */
         }
-      } catch (err) {
-      setError(
-        err instanceof ApiClientError ? err.message : "Failed to load lead",
-      );
+      }
+    } catch (err) {
+      setError(err instanceof ApiClientError ? err.message : "Failed to load lead");
     } finally {
       setLoading(false);
     }
@@ -90,9 +85,7 @@ export function LeadDetail({ id }: { id: string }) {
     return (
       <div>
         <DeskBackLink href="/admin/leads" label="Back to leads" />
-        <p className="text-destructive mt-4 text-sm">
-          {error ?? "Lead not found"}
-        </p>
+        <p className="text-destructive mt-4 text-sm">{error ?? "Lead not found"}</p>
       </div>
     );
   }
@@ -115,8 +108,7 @@ export function LeadDetail({ id }: { id: string }) {
             className={cn(
               "rounded-full px-2.5 py-1 text-[0.65rem] font-bold tracking-wide uppercase",
               lead.status === "new" && "bg-brand-red/10 text-brand-red",
-              lead.status === "read" &&
-                "bg-brand-blue-light text-brand-blue",
+              lead.status === "read" && "bg-brand-blue-light text-brand-blue",
               lead.status === "archived" && "bg-[#f5f5f7] text-[#86868b]",
             )}
           >
@@ -183,9 +175,7 @@ export function LeadDetail({ id }: { id: string }) {
         <Button
           type="button"
           size="sm"
-          render={
-            <a href={`mailto:${lead.email}?subject=Re: your HG Aluminium RFQ`} />
-          }
+          render={<a href={`mailto:${lead.email}?subject=Re: your HG Alutech RFQ`} />}
         >
           Reply by email
         </Button>

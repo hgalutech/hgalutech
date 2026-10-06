@@ -15,7 +15,10 @@ import {
 } from "@/features/public-site/components/cms-empty-state";
 import { InquireBand } from "@/features/public-site/components/inquire-band";
 import { UpcomingProductsStrip } from "@/features/public-site/components/upcoming-products";
-import { getCachedPublishedProducts } from "@/features/public-site/lib/public-cache";
+import {
+  getCachedPublishedProducts,
+  getCachedUpcomingProducts,
+} from "@/features/public-site/lib/public-cache";
 import { localePath } from "@/config/nav.config";
 import { listCategoriesFlat } from "@/modules/catalog";
 import { cn } from "@/lib/utils";
@@ -29,20 +32,22 @@ type ProductsIndexProps = {
  * Visitor path matches admin: Categories → Products under each.
  */
 export async function ProductsIndex({ locale }: ProductsIndexProps) {
-  const [{ items }, cats] = await Promise.all([
+  const [{ items }, cats, upcoming] = await Promise.all([
     getCachedPublishedProducts({
       limit: 100,
       upcoming: false,
     }),
     listCategoriesFlat(),
+    getCachedUpcomingProducts({ limit: 1 }),
   ]);
 
   const groups = groupProductsByCategory(cats, items);
+  const hasUpcoming = upcoming.items.length > 0;
 
   if (groups.length === 0 && items.length === 0) {
     return (
       <>
-        <CatalogueIndexHero locale={locale} />
+        <CatalogueIndexHero locale={locale} showUpcoming={false} />
         <CmsEmptyState locale={locale} title="No products published yet." />
       </>
     );
@@ -50,7 +55,7 @@ export async function ProductsIndex({ locale }: ProductsIndexProps) {
 
   return (
     <>
-      <CatalogueIndexHero locale={locale} />
+      <CatalogueIndexHero locale={locale} showUpcoming={hasUpcoming} />
 
       {groups.length > 0 ? (
         <Section>
@@ -90,19 +95,27 @@ export async function ProductsIndex({ locale }: ProductsIndexProps) {
         density="catalogue"
       />
 
-      <div id="upcoming" className="scroll-mt-24">
-        <UpcomingProductsStrip
-          locale={locale}
-          showCatalogueLink={false}
-          showEmpty
-        />
-      </div>
+      {hasUpcoming ? (
+        <div id="upcoming" className="scroll-mt-24">
+          <UpcomingProductsStrip
+            locale={locale}
+            showCatalogueLink={false}
+            showEmpty={false}
+          />
+        </div>
+      ) : null}
       <InquireBand locale={locale} />
     </>
   );
 }
 
-function CatalogueIndexHero({ locale }: { locale: string }) {
+function CatalogueIndexHero({
+  locale,
+  showUpcoming,
+}: {
+  locale: string;
+  showUpcoming: boolean;
+}) {
   return (
     <section className="relative overflow-hidden bg-[linear-gradient(125deg,var(--brand-blue-darker)_0%,var(--ink)_50%,var(--brand-blue-dark)_100%)] text-white">
       <Container className="relative py-[clamp(2.5rem,6vw,4.25rem)]">
@@ -119,8 +132,7 @@ function CatalogueIndexHero({ locale }: { locale: string }) {
           Categories and products
         </h1>
         <p className="mt-3 max-w-xl text-white/80 text-[clamp(0.95rem,0.9rem+0.25vw,1.05rem)] leading-relaxed">
-          Browse by category — each category holds the products you can enquire
-          about.
+          Browse by category — each category holds the products you can enquire about.
         </p>
         <div className="mt-6 flex flex-wrap gap-3">
           <Link
@@ -129,15 +141,17 @@ function CatalogueIndexHero({ locale }: { locale: string }) {
           >
             Contact / RFQ
           </Link>
-          <Link
-            href="#upcoming"
-            className={cn(
-              buttonVariants({ variant: "outline" }),
-              "min-h-10 border-white/30 bg-transparent text-white hover:bg-white/10 hover:text-white",
-            )}
-          >
-            Upcoming lines
-          </Link>
+          {showUpcoming ? (
+            <Link
+              href="#upcoming"
+              className={cn(
+                buttonVariants({ variant: "outline" }),
+                "min-h-10 border-white/30 bg-transparent text-white hover:bg-white/10 hover:text-white",
+              )}
+            >
+              Upcoming lines
+            </Link>
+          ) : null}
         </div>
       </Container>
     </section>

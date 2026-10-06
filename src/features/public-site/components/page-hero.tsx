@@ -30,7 +30,7 @@ type PageHeroProps = {
  */
 export function PageHero({
   locale,
-  eyebrow = "HG Aluminium",
+  eyebrow = "HG Alutech",
   title,
   description,
   ctaLabel = "Inquire",
@@ -90,10 +90,7 @@ export function PageHero({
             {showCta ? (
               <Link
                 href={localePath(locale, ctaHref)}
-                className={cn(
-                  buttonVariants({ variant: "default" }),
-                  "min-h-10",
-                )}
+                className={cn(buttonVariants({ variant: "default" }), "min-h-10")}
               >
                 {ctaLabel}
               </Link>

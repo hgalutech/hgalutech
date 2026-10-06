@@ -5,12 +5,7 @@ import { useState } from "react";
 import { Play } from "lucide-react";
 
 import { Reveal } from "@/components/atoms/reveal";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import type { HomeContent } from "@/features/public-home/content/home.en";
 
 type MissionVideoSectionProps = {
@@ -61,7 +56,7 @@ export function MissionVideoSection({
             {videoSrc ? (
               <button
                 type="button"
-                aria-label="Play company story video"
+                aria-label="Play aluminium process film"
                 className="group mt-8 inline-flex items-center gap-3 rounded-full border border-white/25 bg-white/10 py-2 pr-5 pl-2 backdrop-blur-md transition-[background,transform] hover:scale-[1.02] hover:bg-white/16"
                 onClick={() => setOpen(true)}
               >
@@ -69,7 +64,7 @@ export function MissionVideoSection({
                   <Play className="ml-0.5 size-4 fill-current min-[480px]:size-[18px]" />
                 </span>
                 <span className="text-left text-[0.8125rem] font-semibold tracking-tight">
-                  Watch our story
+                  Watch process film
                 </span>
               </button>
             ) : null}
@@ -83,7 +78,7 @@ export function MissionVideoSection({
           showCloseButton
         >
           <DialogHeader className="sr-only">
-            <DialogTitle>Company story video</DialogTitle>
+            <DialogTitle>Aluminium process film</DialogTitle>
           </DialogHeader>
           <div className="aspect-video w-full">
             {open ? (
@@ -94,10 +89,21 @@ export function MissionVideoSection({
                 autoPlay
                 poster={videoPoster || content.imageSrc}
               >
-                <source src={videoSrc} type="video/mp4" />
+                <source
+                  src={videoSrc}
+                  type={
+                    videoSrc.toLowerCase().includes(".webm") ? "video/webm" : "video/mp4"
+                  }
+                />
               </video>
             ) : null}
           </div>
+          {videoSrc.includes("alumina-process") ? (
+            <p className="px-4 py-3 text-left text-xs leading-relaxed text-white/75">
+              Alumina treatment at National Aluminium Company, Odisha. Footage by
+              Subhashish Panigrahi, CC BY-SA 3.0. This is not the Kadi plant.
+            </p>
+          ) : null}
         </DialogContent>
       </Dialog>
     </section>

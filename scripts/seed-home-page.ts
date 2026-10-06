@@ -30,28 +30,16 @@ function blocksFromHomeContent() {
       data: c.products,
     },
     {
-      id: "upcoming-products",
-      type: "upcoming-products" as BlockType,
-      order: 3,
-      appearance: "default" as const,
-      data: {
-        eyebrow: "Steel & Deoxidation Solutions",
-        title: "Upcoming products",
-        description:
-          "Aluminium Cubes, Aluminium Shots, Aluminium Notch Bars and Aluminium Deoxidizer Products — specialized forms for steelmaking and metallurgical applications. Register interest for early allocation.",
-      },
-    },
-    {
       id: "markets",
       type: "markets" as BlockType,
-      order: 4,
+      order: 3,
       appearance: "default" as const,
       data: { seeded: true },
     },
     {
       id: "mission",
       type: "mission" as BlockType,
-      order: 5,
+      order: 4,
       appearance: "default" as const,
       data: {
         ...c.mission,
@@ -62,42 +50,42 @@ function blocksFromHomeContent() {
     {
       id: "cta-banner",
       type: "cta-banner" as BlockType,
-      order: 6,
+      order: 5,
       appearance: "default" as const,
       data: c.ctaBanner,
     },
     {
       id: "testimonials",
       type: "testimonials" as BlockType,
-      order: 7,
+      order: 6,
       appearance: "default" as const,
       data: c.testimonials,
     },
     {
       id: "customers",
       type: "customers" as BlockType,
-      order: 8,
+      order: 7,
       appearance: "default" as const,
       data: c.customers,
     },
     {
       id: "joint-ventures",
       type: "joint-ventures" as BlockType,
-      order: 9,
+      order: 8,
       appearance: "default" as const,
       data: c.jointVentures,
     },
     {
       id: "careers-teaser",
       type: "careers-teaser" as BlockType,
-      order: 10,
+      order: 9,
       appearance: "default" as const,
       data: c.careers,
     },
     {
       id: "faq",
       type: "faq" as BlockType,
-      order: 11,
+      order: 10,
       appearance: "default" as const,
       data: c.faq,
     },
@@ -143,11 +131,13 @@ async function main() {
   console.log(JSON.stringify({ published: true, id }, null, 2));
 }
 
-main().catch((err) => {
-  console.error(err);
-  process.exit(1);
-}).then(async () => {
-  const mongoose = await import("mongoose");
-  await mongoose.default.disconnect().catch(() => undefined);
-  process.exit(0);
-});
+main()
+  .catch((err) => {
+    console.error(err);
+    process.exit(1);
+  })
+  .then(async () => {
+    const mongoose = await import("mongoose");
+    await mongoose.default.disconnect().catch(() => undefined);
+    process.exit(0);
+  });

@@ -3,8 +3,8 @@
  * Free-tier account values live in env; this file is code/config only.
  */
 export const siteConfig = {
-  name: "HG Aluminium Smelters",
-  shortName: "HG Aluminium",
+  name: "HG Alutech",
+  shortName: "HG Alutech",
   flags: {
     analytics: false,
     leadsCrmWebhook: false,

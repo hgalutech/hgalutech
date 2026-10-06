@@ -101,53 +101,53 @@ export type HomeContent = {
   };
 };
 
-/** Realistic HG Aluminium mock — extrusion / billets / remelt (Gujarat). */
+/** HG Alutech home copy for the Kadi / Mahesana campus. */
 export const homeContentEn: HomeContent = {
   hero: {
     slides: [
       {
-        imageSrc: "https://picsum.photos/seed/hg-plant-wide-v2/1600/900",
-        imageAlt: "HG Aluminium Smelters plant campus in Kadi, Gujarat",
-        eyebrow: "HG Aluminium Smelters · Kadi, Gujarat",
-        title: "Aluminium programmes you can plan around",
+        imageSrc: "/products/aluminium-ingots.jpg",
+        imageAlt: "Aluminium ingots packed for dispatch",
+        eyebrow: "HG Alutech · Kadi, Gujarat",
+        title: "Aluminium you can specify and schedule",
         subtitle:
-          "Extrusion profiles, homogenised billets and remelt ingots — chemistry control, mill certificates, and dispatch cadence that matches your line.",
+          "Aluminium ingots, plus cubes, shots, notch bars and deoxidizer products — chemistry, certificates, and a Kadi / Mahesana plant you can enquire against.",
         primaryCta: { label: "Inquire Now", href: "contact" },
         video: {
-          src: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-          posterSrc: "https://picsum.photos/seed/hg-video-poster-v2/960/540",
-          label: "Watch our story",
+          src: "/media/alumina-process.webm",
+          posterSrc: "/products/aluminium-ingots.jpg",
+          label: "Aluminium process film",
         },
       },
       {
-        imageSrc: "https://picsum.photos/seed/hg-molten-pour-v2/1600/900",
-        imageAlt: "Molten aluminium pour on the casting floor",
-        eyebrow: "Extrusion · Billets · Remelt",
-        title: "From melt to market-ready alloy",
+        imageSrc: "/products/aluminium-shots.jpg",
+        imageAlt: "Aluminium shots for melt addition",
+        eyebrow: "Ingots · Steel deoxidation",
+        title: "Ingots for foundry and remelt",
         subtitle:
-          "Integrated casting and press capability for architectural, industrial, solar and foundry customers across India.",
+          "Secondary aluminium and alloy ingots for foundries, die-casters, alloy makers and remelt programmes.",
         primaryCta: { label: "Inquire Now", href: "contact" },
         video: null,
       },
       {
-        imageSrc: "https://picsum.photos/seed/hg-ingot-line-v2/1600/900",
-        imageAlt: "Finished aluminium billets staged for dispatch",
-        eyebrow: "Traceable every lot",
-        title: "Specs your auditors can trust",
+        imageSrc: "/products/aluminium-cubes.jpg",
+        imageAlt: "Aluminium cubes for melt addition",
+        eyebrow: "Steel deoxidation",
+        title: "Cubes, shots, notch bars and deoxidizer",
         subtitle:
-          "Documented release criteria and certificates that travel with every consignment — chemistry, dimensions, and lot ID.",
+          "Current catalogue forms for steel plants and metallurgical treatment — sized, packed and certified to the purchase order.",
         primaryCta: { label: "View catalogue", href: "products" },
         video: null,
       },
     ],
   },
   capability: {
-    eyebrow: "HG Aluminium Smelters Ltd.",
-    title: "Cast. Homogenise. Extrude.",
-    body: "We cast, homogenise and extrude aluminium for architectural, industrial, solar and foundry programmes from our Kadi / Mahesana campus — reliable chemistry, dimensional control and lot-level certificates.",
-    highlightWords: ["cast", "homogenise", "extrude", "aluminium"],
+    eyebrow: "HG Alutech",
+    title: "Ingots and deoxidation forms.",
+    body: "HG Alutech supplies aluminium ingots, cubes, shots, notch bars and deoxidizer products from the Kadi / Mahesana campus.",
+    highlightWords: ["ingots", "cubes", "shots", "deoxidizer"],
     stats: [
-      { target: 3, suffix: "", label: "Core product families" },
+      { target: 5, suffix: "", label: "Current catalogue lines" },
       { target: 8, suffix: "+", label: "Industry segments" },
       { target: 1, suffix: "", label: "Integrated Gujarat campus" },
       { target: 100, suffix: "%", label: "Lots with release docs" },
@@ -155,14 +155,14 @@ export const homeContentEn: HomeContent = {
   },
   products: {
     eyebrow: "Our Products",
-    title: "Present catalogue lines",
+    title: "Current aluminium catalogue",
     description:
-      "Aluminium Extrusion Profiles, Aluminium Homogenized Billets and Aluminium Ingots — published and ready for enquiry.",
+      "Aluminium ingots, cubes, shots, notch bars and deoxidizer products — all current, all in the aluminium category.",
     items: [],
   },
   mission: {
-    imageSrc: "https://picsum.photos/seed/hg-mission-plant-v2/1600/900",
-    imageAlt: "Sunset light across the HG Aluminium plant roof line",
+    imageSrc: "/products/aluminium-ingots.jpg",
+    imageAlt: "Aluminium ingots packed for dispatch",
     statement:
       "To be the aluminium partner programmes trust — for chemistry, certificates and on-time delivery.",
   },
@@ -199,23 +199,23 @@ export const homeContentEn: HomeContent = {
   },
   jointVentures: {
     eyebrow: "Plant capability",
-    title: "One campus — melt to profile",
-    imageSrc: "https://picsum.photos/seed/hg-press-floor-v2/1600/900",
-    imageAlt: "Extrusion press floor at HG Aluminium",
+    title: "Ingots and steel-plant forms",
+    imageSrc: "/products/aluminium-shots.jpg",
+    imageAlt: "Aluminium shots for melt addition",
     items: [
       {
         title: "Casting & remelt",
-        subtitle: "Chemistry control to programme grade",
+        subtitle: "Ingots and alloy grades to the order",
         icon: "factory",
       },
       {
-        title: "Extrusion press",
-        subtitle: "Profiles for solar, structure & OEM",
+        title: "Lot certificates",
+        subtitle: "Chemistry and form on the purchase order",
         icon: "handshake",
       },
       {
-        title: "Quality release",
-        subtitle: "Mill certificates with every lot",
+        title: "Steel deoxidation",
+        subtitle: "Cubes, shots, notch bars, deoxidizer",
         icon: "leaf",
       },
     ],
@@ -228,16 +228,16 @@ export const homeContentEn: HomeContent = {
     ctaHref: "careers",
     images: [
       {
-        src: "https://picsum.photos/seed/hg-engineer-point-v2/900/600",
-        alt: "Engineer in a hard hat reviewing the plant floor",
+        src: "/products/aluminium-ingots.jpg",
+        alt: "Aluminium ingots",
       },
       {
-        src: "https://picsum.photos/seed/hg-team-lineup-v2/700/525",
-        alt: "Production team in safety uniforms at the plant",
+        src: "/products/aluminium-cubes.jpg",
+        alt: "Aluminium cubes",
       },
       {
-        src: "https://picsum.photos/seed/hg-qc-lab-v2/700/525",
-        alt: "Quality technician checking a billet sample",
+        src: "/products/aluminium-deoxidizer.jpg",
+        alt: "Aluminium deoxidizer cubes",
       },
     ],
   },
@@ -246,9 +246,9 @@ export const homeContentEn: HomeContent = {
     title: "Frequently asked questions",
     items: [
       {
-        question: "What does HG Aluminium produce?",
+        question: "What does HG Alutech supply?",
         answer:
-          "Extrusion profiles, homogenised billets and remelt ingots / alloys from our Kadi / Mahesana campus in Gujarat — with chemistry control and mill certificates on released lots.",
+          "Five current aluminium lines: ingots, cubes, shots, notch bars and deoxidizer products, from the Kadi / Mahesana campus in Gujarat.",
       },
       {
         question: "Where is the plant located?",
@@ -271,9 +271,9 @@ export const homeContentEn: HomeContent = {
           "Architectural and infrastructure extrusions, solar mounting and frames, industrial sections, cable / conductor-related demand, and foundry remelt programmes — see Markets we serve for the full map.",
       },
       {
-        question: "Are upcoming products available to order?",
+        question: "Are cubes, shots and notch bars available to order?",
         answer:
-          "Upcoming lines are marked Coming soon. You can register interest on the product page; allocation opens when the line is published in the present catalogue.",
+          "Yes. Cubes, shots, notch bars and deoxidizer products are current catalogue lines, in the same aluminium category as profiles, billets and ingots. Send alloy, form, sizing and tonnage with your enquiry.",
       },
     ],
   },

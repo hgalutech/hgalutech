@@ -10,9 +10,7 @@ type PageProps = {
   params: Promise<{ locale: string; slug: string }>;
 };
 
-export async function generateMetadata({
-  params,
-}: PageProps): Promise<Metadata> {
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
   const product = await getCachedPublishedProductBySlug(slug);
   if (!product) {
@@ -26,7 +24,7 @@ export async function generateMetadata({
   const description =
     product.seo?.description?.trim() ||
     product.description?.trim() ||
-    `${product.name.en} (${product.sku}) — HG Aluminium catalogue.`;
+    `${product.name.en} (${product.sku}) — HG Alutech catalogue.`;
 
   return {
     title,

@@ -140,7 +140,7 @@ export function MarketsSection({
   locale,
   eyebrow = "Markets",
   title = "Markets we serve",
-  description = "Application sectors shaped by extrusion, billet and remelt demand.",
+  description = "Application sectors for ingots and steel-deoxidation forms.",
   segments,
   limit = 8,
 }: MarketsSectionProps) {

@@ -48,7 +48,7 @@ export async function CmsPageView({ locale, slug }: CmsPageViewProps) {
       {!isHome ? (
         <PageHero
           locale={locale}
-          title={page.title || template?.label || "HG Aluminium"}
+          title={page.title || template?.label || "HG Alutech"}
           description={page.seo?.description || template?.description}
           showCta={false}
         />

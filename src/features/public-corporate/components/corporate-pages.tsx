@@ -117,7 +117,7 @@ export async function LeadershipGridBlock({
               Leadership
             </h2>
             <p className="text-muted-foreground mt-1 max-w-xl text-xs sm:text-sm">
-              Board and executive stewardship of HG Aluminium Smelters Limited.
+              Board and executive stewardship of HG Alutech.
             </p>
           </div>
           <Link
@@ -254,7 +254,7 @@ export async function LeadershipPage({ locale }: { locale: string }) {
         <PageHero
           locale={locale}
           title="Leadership"
-          description="Board and executive stewardship of HG Aluminium Smelters Limited."
+          description="Board and executive stewardship of HG Alutech."
           secondaryLabel="About HG"
           secondaryHref="about"
         />
@@ -279,7 +279,7 @@ export async function LeadershipPage({ locale }: { locale: string }) {
       <PageHero
         locale={locale}
         title="Leadership"
-        description="Board and executive stewardship of HG Aluminium Smelters Limited."
+        description="Board and executive stewardship of HG Alutech."
         secondaryLabel="About HG"
         secondaryHref="about"
       />

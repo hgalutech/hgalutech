@@ -1,0 +1,14 @@
+Licences for media added for the HG Alutech catalogue. These photographs and the film are not of the Kadi plant.
+
+public/media/alumina-process.webm
+Alumina boiling in a smelter plant, National Aluminium Company, Nalconagar, Anugul, Odisha.
+Author: Subhashish Panigrahi.
+Licence: Creative Commons Attribution-ShareAlike 3.0 Unported.
+https://commons.wikimedia.org/wiki/File:Alumina_boiling_in_a_smelter_plant,_National_Aluminium_Company,_Nalconagar,_Anugul,_Odisha.webm
+
+public/products/aluminium-notch-bars.jpg
+Hand-coloured 1926 photograph of cast aluminium bars at Norwegian Aluminium Company, Høyanger.
+Photographer: Anders Beer Wilse. Collection: Norwegian Museum of Science and Technology.
+Licence: Creative Commons Attribution 4.0 International.
+https://commons.wikimedia.org/wiki/File:Aluminum_ingots_at_Norwegian_Aluminium_Company.jpg
+This is a photograph of cast bars, not a close view of notched bars.

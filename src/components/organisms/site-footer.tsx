@@ -78,7 +78,7 @@ export function SiteFooter({
   contact = footerContactFallback,
   socialLinks = [],
   quickLinks,
-  blurb = "Aluminium extrusion, billets and remelt alloys from Kadi, Gujarat — serving architectural, industrial and solar markets across India.",
+  blurb = "Aluminium ingots, cubes, shots, notch bars and deoxidizer products from Kadi, Gujarat.",
   brandLogoSrc = null,
   brandLogoHeightPx,
 }: SiteFooterProps) {
@@ -86,9 +86,7 @@ export function SiteFooter({
 
   /** Legacy flat quickLinks: put them under Products if structured columns omitted. */
   const productLinks =
-    products.length > 0
-      ? products
-      : (quickLinks?.length ? quickLinks : defaultProducts);
+    products.length > 0 ? products : quickLinks?.length ? quickLinks : defaultProducts;
 
   return (
     <footer id="site-footer" className="bg-ink text-on-dark">
@@ -122,10 +120,7 @@ export function SiteFooter({
               </li>
               <li className="flex gap-2">
                 <Mail className="mt-0.5 size-4 shrink-0 text-brand-red" />
-                <a
-                  href={`mailto:${contact.email}`}
-                  className="hover:text-white"
-                >
+                <a href={`mailto:${contact.email}`} className="hover:text-white">
                   {contact.email}
                 </a>
               </li>
@@ -146,7 +141,7 @@ export function SiteFooter({
       <div className="border-t border-white/10">
         <Container className="flex flex-col gap-3 py-4 min-[640px]:flex-row min-[640px]:items-center min-[640px]:justify-between">
           <p className="text-center text-xs text-on-dark-muted min-[640px]:text-left">
-            <span className="text-white/90">HG Aluminium Smelters Limited</span>
+            <span className="text-white/90">HG Alutech</span>
             {" · "}
             Copyright © {year}
           </p>

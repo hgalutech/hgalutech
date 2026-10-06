@@ -38,7 +38,7 @@ export async function AboutPage({ locale }: { locale: string }) {
       <PageHero
         locale={locale}
         title="Aluminium made for demanding programmes"
-        description="HG Aluminium Smelters Limited — extrusion, homogenised billets and remelt from Kadi / Mahesana, Gujarat."
+        description="HG Alutech — aluminium ingots, cubes, shots, notch bars and deoxidizer products from Kadi / Mahesana, Gujarat."
         secondaryLabel="View products"
         secondaryHref="products"
       />
@@ -55,11 +55,7 @@ export async function AboutPage({ locale }: { locale: string }) {
             <TextLinkRow locale={locale} href="leadership" label="Leadership" />
             <TextLinkRow locale={locale} href="capacity" label="Capacity" />
             <TextLinkRow locale={locale} href="journey" label="Our journey" />
-            <TextLinkRow
-              locale={locale}
-              href="manufacturing"
-              label="Infrastructure"
-            />
+            <TextLinkRow locale={locale} href="manufacturing" label="Infrastructure" />
           </Reveal>
         </Container>
       </Section>

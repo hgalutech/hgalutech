@@ -7,7 +7,7 @@ type PageProps = { params: Promise<{ locale: string }> };
 export const metadata: Metadata = {
   title: "Careers",
   description:
-    "Open roles at HG Aluminium — operations, quality, maintenance and commercial careers in Kadi, Gujarat.",
+    "Open roles at HG Alutech — operations, quality, maintenance and commercial careers in Kadi, Gujarat.",
 };
 
 export default async function Page({ params }: PageProps) {

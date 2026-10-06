@@ -35,7 +35,7 @@ const pages: PageSeed[] = [
     slug: "about",
     title: "Aluminium made for demanding programmes",
     description:
-      "HG Aluminium Smelters Limited — extrusion, homogenised billets and remelt from Kadi / Mahesana, Gujarat.",
+      "HG Alutech — aluminium ingots, cubes, shots, notch bars and deoxidizer products from Kadi / Mahesana, Gujarat.",
     blocks: [
       {
         id: "a-intro",
@@ -134,7 +134,7 @@ const pages: PageSeed[] = [
             {
               year: "2018",
               title: "Company incorporation",
-              body: "HG Aluminium Smelters Limited established to build secondary aluminium and extrusion capability in Gujarat — legal identity first, plant next.",
+              body: "HG Alutech established to build secondary aluminium and extrusion capability in Gujarat — legal identity first, plant next.",
             },
             {
               year: "Plant",
@@ -175,7 +175,7 @@ const pages: PageSeed[] = [
         data: {
           eyebrow: "Industries We Serve",
           title: "Where our products are specified",
-          body: "From renewable energy and construction to engineering, transportation, electrical systems and metal processing, HG Aluminium Smelters Limited delivers aluminium solutions designed to meet diverse industrial requirements. Through our integrated portfolio of aluminium ingots, homogenized billets, extrusion profiles and specialized aluminium products, we support manufacturers across multiple downstream sectors.",
+          body: "From renewable energy and construction to engineering, transportation, electrical systems and metal processing, HG Alutech supplies aluminium ingots and steel-deoxidation forms — cubes, shots, notch bars and deoxidizer products.",
           ctaLabel: "View products",
           ctaHref: "products",
         },
@@ -188,7 +188,7 @@ const pages: PageSeed[] = [
         data: {
           eyebrow: "Sectors",
           title: "Industries we serve",
-          body: "Product-to-industry mapping: Extrusion Profiles → solar, architecture, formwork, industrial, electrical, automotive, transport, HVAC. Homogenized Billets → aluminium extrusion manufacturers. Ingots → foundry, casting, alloy manufacturing. Cubes / Shots / Notch Bars / Deoxidizer (upcoming) → Steel & Deoxidation Solutions.",
+          body: "Current catalogue: aluminium ingots for foundry, casting and alloy manufacturing. Cubes, shots, notch bars and deoxidizer products for steel and deoxidation.",
           items: [
             {
               label: "Solar Energy",
@@ -199,51 +199,35 @@ const pages: PageSeed[] = [
                 "Mounting rails",
                 "Rooftop & utility structures",
               ],
-              productHref: "products/aluminium-extrusion-profiles",
+              productHref: "products/aluminium-ingots",
             },
             {
               label: "Architecture & Construction",
               description:
                 "Doors, windows, curtain walls, façades, partitions, railings and structural glazing profiles.",
-              applications: [
-                "Façade systems",
-                "Fenestration",
-                "Building trims",
-              ],
-              productHref: "products/aluminium-extrusion-profiles",
+              applications: ["Façade systems", "Fenestration", "Building trims"],
+              productHref: "products/aluminium-ingots",
             },
             {
               label: "Aluminium Formwork",
               description:
                 "High-strength profiles for reusable formwork panels, beams and monolithic building systems.",
-              applications: [
-                "Formwork panels",
-                "Beam sections",
-                "Mass housing systems",
-              ],
-              productHref: "products/aluminium-extrusion-profiles",
+              applications: ["Formwork panels", "Beam sections", "Mass housing systems"],
+              productHref: "products/aluminium-ingots",
             },
             {
               label: "Industrial Engineering",
               description:
                 "Machine frames, automation structures, conveyors, racks and custom mechanical profiles.",
-              applications: [
-                "Machine frames",
-                "Automation",
-                "Conveyor systems",
-              ],
-              productHref: "products/aluminium-extrusion-profiles",
+              applications: ["Machine frames", "Automation", "Conveyor systems"],
+              productHref: "products/aluminium-ingots",
             },
             {
               label: "Electrical & Power",
               description:
                 "Heat sinks, enclosures, busbar housings and suitable conductor-grade aluminium when specified.",
-              applications: [
-                "Heat sinks",
-                "Electrical enclosures",
-                "Conductor feed",
-              ],
-              productHref: "products/aluminium-extrusion-profiles",
+              applications: ["Heat sinks", "Electrical enclosures", "Conductor feed"],
+              productHref: "products/aluminium-ingots",
             },
             {
               label: "Automotive & Transportation",
@@ -254,7 +238,7 @@ const pages: PageSeed[] = [
                 "EV-related sections",
                 "Transport sections",
               ],
-              productHref: "products/aluminium-extrusion-profiles",
+              productHref: "products/aluminium-ingots",
             },
             {
               label: "Railways & Transport",
@@ -265,18 +249,14 @@ const pages: PageSeed[] = [
                 "Transport sections",
                 "Interior rail sections",
               ],
-              productHref: "products/aluminium-extrusion-profiles",
+              productHref: "products/aluminium-ingots",
             },
             {
               label: "HVAC & Cryogenic",
               description:
                 "Profiles for heat dissipation, HVAC, thermal management and specialized cryogenic engineering where grade allows.",
-              applications: [
-                "Heat sinks",
-                "HVAC sections",
-                "Thermal management",
-              ],
-              productHref: "products/aluminium-extrusion-profiles",
+              applications: ["Heat sinks", "HVAC sections", "Thermal management"],
+              productHref: "products/aluminium-ingots",
             },
             {
               label: "Aluminium Extrusion Manufacturers",
@@ -287,29 +267,25 @@ const pages: PageSeed[] = [
                 "6xxx series programmes",
                 "Merchant press feed",
               ],
-              productHref: "products/aluminium-homogenized-billets",
+              productHref: "products/aluminium-ingots",
             },
             {
               label: "Foundry & Alloy Manufacturing",
               description:
                 "Aluminium ingots and alloy products for foundries, die-casting, remelting units and secondary aluminium processors.",
-              applications: [
-                "Die casting",
-                "Gravity casting",
-                "Alloy remelting",
-              ],
+              applications: ["Die casting", "Gravity casting", "Alloy remelting"],
               productHref: "products/aluminium-ingots",
             },
             {
               label: "Steel & Deoxidation Solutions",
               description:
-                "Upcoming specialized forms — Aluminium Cubes, Aluminium Shots, Aluminium Notch Bars and Deoxidizer Products — for steelmaking deoxidation and metallurgical treatment.",
+                "Aluminium cubes, shots, notch bars and deoxidizer products for steelmaking deoxidation and metallurgical treatment.",
               applications: [
                 "Steel deoxidation",
                 "Metallurgical treatment",
                 "Melt chemistry adjustment",
               ],
-              productHref: "products#upcoming",
+              productHref: "products/aluminium-deoxidizer",
             },
           ],
         },

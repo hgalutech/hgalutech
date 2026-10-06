@@ -1,5 +1,5 @@
 /**
- * Realistic CMS seed for HG Aluminium Smelters Limited.
+ * Realistic CMS seed for HG Alutech.
  *
  * Sources:
  * - LEI registry: legal name + factory address (Kadi / Mahesana, Gujarat)
@@ -23,6 +23,8 @@ import {
   listCategoriesFlat,
   listProducts,
   publishProduct,
+  softDeleteProduct,
+  updateCategory,
   updateProduct,
   DICTIONARY_KEYS,
   upsertDictionary,
@@ -50,11 +52,7 @@ import {
   updateSustainabilityMetric,
   upsertCompanyProfile,
 } from "@/modules/corporate";
-import {
-  createOpening,
-  listOpenings,
-  publishOpening,
-} from "@/modules/careers";
+import { createOpening, listOpenings, publishOpening } from "@/modules/careers";
 import { getPageBySlug, publishPage } from "@/modules/cms";
 import { dictionarySeed } from "./specs.dictionary.seed";
 
@@ -67,19 +65,14 @@ type SeedNode = {
 };
 
 const SOURCE =
-  "docs/Data product briefs + LEI registry (HG Aluminium Smelters Limited) — confirm before production";
+  "docs/Data product briefs + LEI registry (HG Alutech) — confirm before production";
 
 async function seedCategories() {
-  const raw = readFileSync(
-    resolve(process.cwd(), "config/categories.seed.json"),
-    "utf8",
-  );
+  const raw = readFileSync(resolve(process.cwd(), "config/categories.seed.json"), "utf8");
   const tree = JSON.parse(raw) as SeedNode[];
 
   async function walk(node: SeedNode, parentId: string | null) {
-    const existing = (await listCategoriesFlat()).find(
-      (c) => c.slug === node.slug,
-    );
+    const existing = (await listCategoriesFlat()).find((c) => c.slug === node.slug);
     let id = existing?.id ?? null;
     if (!existing) {
       const created = await createCategory({
@@ -93,6 +86,13 @@ async function seedCategories() {
       id = created.id;
       console.log(`  + category ${node.slug}`);
     } else {
+      await updateCategory(existing.id, {
+        name: node.name,
+        description: node.description,
+        imageUrl: node.imageUrl,
+        status: "published",
+        version: existing.version,
+      });
       console.log(`  = category ${node.slug}`);
     }
     for (const child of node.children ?? []) {
@@ -114,10 +114,10 @@ async function seedDictionaries() {
 async function seedCompany() {
   const existing = await getCompanyProfile();
   const payload = {
-    legalName: "HG Aluminium Smelters Limited",
+    legalName: "HG Alutech",
     displayNames: {
-      primary: "HG Aluminium",
-      alsoMention: ["HG Aluminium Smelters"],
+      primary: "HG Alutech",
+      alsoMention: [],
     },
     // CIN pending MCA confirmation — leave blank rather than invent
     cin: existing?.cin || "",
@@ -144,12 +144,12 @@ async function seedCompany() {
       { label: "Plant", number: "+91 2764 000001" },
     ],
     emails: {
-      sales: "sales@hgaluminium.com",
-      export: "export@hgaluminium.com",
-      purchase: "purchase@hgaluminium.com",
-      investor: "investor@hgaluminium.com",
-      hr: "hr@hgaluminium.com",
-      quality: "quality@hgaluminium.com",
+      sales: "sales@hgalutech.com",
+      export: "export@hgalutech.com",
+      purchase: "purchase@hgalutech.com",
+      investor: "investor@hgalutech.com",
+      hr: "hr@hgalutech.com",
+      quality: "quality@hgalutech.com",
     },
     brandColors: {
       primary: "#1B4F72",
@@ -229,7 +229,7 @@ async function seedPeople() {
       boardDesignation: "Head of Finance & Accounts",
       yearsExperience: 6,
       bio: {
-        en: "Leads finance and accounts for HG Aluminium Smelters Limited at the Kadi / Mahesana campus — statutory reporting, working capital and commercial controls.",
+        en: "Leads finance and accounts for HG Alutech at the Kadi / Mahesana campus — statutory reporting, working capital and commercial controls.",
       },
       sortOrder: 5,
     },
@@ -257,13 +257,7 @@ async function seedCapacity() {
     value: string;
     unit: string;
     category:
-      | "extrusion"
-      | "billet"
-      | "ingot"
-      | "melting"
-      | "press"
-      | "dimension"
-      | "commercial";
+      "extrusion" | "billet" | "ingot" | "melting" | "press" | "dimension" | "commercial";
     publish: boolean;
     verification: "draft" | "needs_verification" | "verified";
     order: number;
@@ -472,9 +466,7 @@ async function seedCapacity() {
       if ("error" in updated) throw new Error(JSON.stringify(updated));
       row = updated.metric;
     }
-    console.log(
-      `  + capacity ${m.key} (${row.verificationStatus}/${row.publishStatus})`,
-    );
+    console.log(`  + capacity ${m.key} (${row.verificationStatus}/${row.publishStatus})`);
   }
 }
 
@@ -504,14 +496,14 @@ async function seedCertifications() {
     {
       name: "Quality Policy",
       type: "quality_policy" as const,
-      issuer: "HG Aluminium Smelters Limited",
+      issuer: "HG Alutech",
       validFrom: "2025-04-01",
       validTo: null,
     },
     {
       name: "Mill Test Certificate Template (EN 10204 3.1)",
       type: "test_certificate_template" as const,
-      issuer: "HG Aluminium — QC Lab",
+      issuer: "HG Alutech — QC Lab",
       validFrom: "2025-01-01",
       validTo: null,
     },
@@ -715,8 +707,7 @@ async function seedCustomers() {
       name: l.name,
       listingKind: "potential",
       approvedForWebsite: true,
-      permissionNote:
-        "Potential / future business opportunity — from client DOCX lists",
+      permissionNote: "Potential / future business opportunity — from client DOCX lists",
       publishStatus: "published",
       sortOrder: l.sortOrder,
     });
@@ -804,9 +795,7 @@ async function seedTestimonials() {
   const existing = await listTestimonials();
   for (const t of items) {
     if (
-      existing.items.some(
-        (x) => x.authorName === t.authorName && x.company === t.company,
-      )
+      existing.items.some((x) => x.authorName === t.authorName && x.company === t.company)
     ) {
       console.log(`  = testimonial ${t.authorName}`);
       continue;
@@ -892,7 +881,7 @@ async function seedCareerOpenings() {
       location: "Kadi, Gujarat",
       employmentType: "full_time" as const,
       summary:
-        "Run 7\" / mid-size press cycles with die change discipline, temperature control and lot traceability.",
+        'Run 7" / mid-size press cycles with die change discipline, temperature control and lot traceability.',
       description: `Responsibilities
 • Operate extrusion presses to production plan; record billet heats, die IDs and scrap reasons
 • Execute die changes safely with maintenance support; hold first-piece checks with QC
@@ -1112,144 +1101,6 @@ async function seedProducts() {
   /** One category → N products. Images from /public/products. Industrial specs for PDP. */
   const products = [
     {
-      sku: "HG-EXT-PROFILE",
-      name: { en: "Aluminium Extrusion Profiles" },
-      slug: "aluminium-extrusion-profiles",
-      imageUrl: "/products/extrusion-profiles.jpg",
-      formType: "extrusion" as const,
-      alloyGrades: ["6063", "6061", "6005", "6082"],
-      tempers: ["T5", "T6"],
-      surfaceFinishes: ["mill", "anodized", "powder_coated"],
-      anodizingColors: ["natural", "bronze", "black"],
-      ralColors: ["RAL9016", "RAL7016", "RAL9005"],
-      toleranceStandards: ["EN", "IS"],
-      packaging: ["bundle", "stretch_wrap", "crate"],
-      applications: [
-        "Solar Energy",
-        "Architecture & Construction",
-        "Aluminium Formwork",
-        "Industrial Engineering",
-        "Automotive & EV",
-        "Electrical & Electronics",
-        "Railways & Transportation",
-        "HVAC & Thermal Management",
-      ],
-      otherApplications: [
-        "Furniture",
-        "Cryogenic",
-        "Consumer Durables",
-        "Specialized Engineering",
-      ],
-      directCustomers: [
-        "Solar module manufacturers",
-        "Solar structure manufacturers",
-        "Aluminium system houses",
-        "Architectural fabricators",
-        "Formwork manufacturers",
-        "Industrial equipment manufacturers",
-        "Automotive component manufacturers",
-        "Electrical equipment manufacturers",
-        "HVAC manufacturers",
-        "Railway and transport companies",
-        "Furniture manufacturers",
-        "General engineering companies",
-      ],
-      endUseIndustries: [] as string[],
-      capabilityApplications: [
-        "Defence equipment (capability / potential)",
-        "Aerospace-related structural parts (capability / potential)",
-        "High-performance engineering profiles (capability / potential)",
-      ],
-      highlights: [
-        "Custom sections to customer drawings and technical specifications",
-        "Mill, anodized and powder-coated finishes",
-        "Press capacity for architectural, solar and industrial sections",
-      ],
-      chemicalComposition: [
-        { element: "Si", range: "0.20–0.60%" },
-        { element: "Fe", range: "≤ 0.35%" },
-        { element: "Cu", range: "≤ 0.10%" },
-        { element: "Mn", range: "≤ 0.10%" },
-        { element: "Mg", range: "0.45–0.90%" },
-        { element: "Cr", range: "≤ 0.10%" },
-        { element: "Zn", range: "≤ 0.10%" },
-        { element: "Ti", range: "≤ 0.10%" },
-        { element: "Al", range: "Balance" },
-      ],
-      maxLengthMm: 6000,
-      minLengthMm: 1000,
-      maxWidthMm: 386,
-      weightPerMeterKg: 2.4,
-      standardsNote: "EN 755 / EN 12020 dimensional practice (programme dependent)",
-      moqNote: "Typical programmes from ~3–5 MT / month — confirm die & packing on RFQ.",
-      isUpcoming: false,
-      description:
-        "HG Aluminium Smelters Limited manufactures precision aluminium extrusion profiles for diverse industrial and commercial applications. Our extrusion capabilities support standard as well as customized profiles manufactured as per customer drawings, technical specifications and application requirements.",
-    },
-    {
-      sku: "HG-BIL-HOMO",
-      name: { en: "Aluminium Homogenized Billets" },
-      slug: "aluminium-homogenized-billets",
-      imageUrl: "/products/aluminium-billets.jpg",
-      formType: "billet" as const,
-      alloyGrades: ["6063", "6061", "6082", "6005"],
-      tempers: ["F"],
-      surfaceFinishes: ["mill"],
-      anodizingColors: [] as string[],
-      ralColors: [] as string[],
-      toleranceStandards: ["IS", "ASTM"],
-      packaging: ["bundle"],
-      applications: [] as string[],
-      otherApplications: [] as string[],
-      directCustomers: [
-        "Aluminium Extrusion Profile Manufacturers",
-        "Architectural Extrusion Manufacturers",
-        "Solar Profile Manufacturers",
-        "Industrial Extrusion Manufacturers",
-        "Automotive Extrusion Manufacturers",
-        "Electrical Profile Manufacturers",
-        "General Engineering Extrusion Companies",
-      ],
-      endUseIndustries: [
-        "Solar Energy",
-        "Architecture & Construction",
-        "Automotive & EV",
-        "Electrical & Electronics",
-        "Transport",
-        "Industrial Engineering",
-        "HVAC",
-        "Furniture",
-        "Other engineering applications",
-      ],
-      capabilityApplications: [] as string[],
-      highlights: [
-        "Primary focus: feedstock for aluminium extrusion manufacturers",
-        "Homogenized for consistent extrusion performance and surface quality",
-        "Diameter and cut lengths to press programme",
-      ],
-      chemicalComposition: [
-        { element: "Si", range: "0.20–0.60%" },
-        { element: "Fe", range: "≤ 0.35%" },
-        { element: "Cu", range: "≤ 0.10%" },
-        { element: "Mn", range: "≤ 0.10%" },
-        { element: "Mg", range: "0.45–0.90%" },
-        { element: "Cr", range: "≤ 0.10%" },
-        { element: "Zn", range: "≤ 0.10%" },
-        { element: "Ti", range: "≤ 0.10%" },
-        { element: "Others (each)", range: "≤ 0.05%" },
-        { element: "Al", range: "Balance" },
-      ],
-      maxLengthMm: 6000,
-      minLengthMm: 400,
-      typicalDiameterMm: 178,
-      typicalPieceWeightKg: 35,
-      standardsNote: "AA / EN wrought alloy practice; chemistry per purchase order",
-      moqNote: "Billet lots typically scheduled in truck / container lots — enquire for diameter.",
-      isUpcoming: false,
-      description:
-        "HG Aluminium Smelters Limited manufactures high-quality homogenized aluminium billets designed primarily for aluminium extrusion manufacturers. These billets serve as the raw material for producing precision extrusion profiles across a wide range of end-use industries. Our homogenized aluminium billets are developed to support consistent extrusion performance, surface quality and dimensional reliability for profile manufacturers serving diverse industrial sectors.",
-    },
-    {
       sku: "HG-ING-REMELT",
       name: { en: "Aluminium Ingots" },
       slug: "aluminium-ingots",
@@ -1311,11 +1162,12 @@ async function seedProducts() {
       ],
       typicalPieceWeightKg: 7,
       maxLengthMm: 700,
-      standardsNote: "IS / ASTM casting alloy practice — final analysis on mill / lab cert",
+      standardsNote:
+        "IS / ASTM casting alloy practice — final analysis on mill / lab cert",
       moqNote: "Typical foundry programmes from ~5–10 MT — confirm grade & packing.",
       isUpcoming: false,
       description:
-        "HG Aluminium Smelters Limited manufactures aluminium ingots and secondary aluminium alloy ingots for foundries, die-casting manufacturers, alloy producers, remelting units and engineering industries. Manufactured with controlled chemistry and consistent quality, our ingots serve as reliable raw material for a wide range of downstream casting and manufacturing applications.",
+        "HG Alutech manufactures aluminium ingots and secondary aluminium alloy ingots for foundries, die-casting manufacturers, alloy producers, remelting units and engineering industries. Manufactured with controlled chemistry and consistent quality, our ingots serve as reliable raw material for a wide range of downstream casting and manufacturing applications.",
     },
     {
       sku: "HG-CUBE",
@@ -1341,7 +1193,7 @@ async function seedProducts() {
       endUseIndustries: ["Steel & Deoxidation Solutions"],
       capabilityApplications: [] as string[],
       highlights: [
-        "Part of HG Steel & Deoxidation Solutions (upcoming)",
+        "Current steel and deoxidation form in the aluminium catalogue",
         "Sized for controlled melting and furnace dosing",
         "Consistent chemistry per lot",
       ],
@@ -1355,7 +1207,7 @@ async function seedProducts() {
       typicalPieceWeightKg: 0.5,
       standardsNote: "Commercial purity remelt forms — certify to PO chemistry",
       moqNote: "Bag / pallet lots — enquire for sizing and monthly allocation.",
-      isUpcoming: true,
+      isUpcoming: false,
       description:
         "Specialized aluminium cubes for steelmaking and metallurgical applications, including deoxidation and melt chemistry adjustment. Part of HG Steel & Deoxidation Solutions.",
     },
@@ -1383,7 +1235,7 @@ async function seedProducts() {
       endUseIndustries: ["Steel & Deoxidation Solutions"],
       capabilityApplications: [] as string[],
       highlights: [
-        "Part of HG Steel & Deoxidation Solutions (upcoming)",
+        "Current steel and deoxidation form in the aluminium catalogue",
         "Rapid dissolution in melt",
         "Predictable metal recovery",
       ],
@@ -1396,7 +1248,7 @@ async function seedProducts() {
       typicalPieceWeightKg: 0.02,
       standardsNote: "Shot sizing to agreed mesh / sieve band",
       moqNote: "Bagged lots with lot ID — confirm sizing on RFQ.",
-      isUpcoming: true,
+      isUpcoming: false,
       description:
         "Aluminium shots for steelmaking and metallurgical deoxidation programmes. Part of HG Steel & Deoxidation Solutions.",
     },
@@ -1404,7 +1256,7 @@ async function seedProducts() {
       sku: "HG-NOTCH",
       name: { en: "Aluminium Notch Bars" },
       slug: "aluminium-notch-bars",
-      imageUrl: "/products/placeholder.svg",
+      imageUrl: "/products/aluminium-notch-bars.jpg",
       formType: "remelt" as const,
       alloyGrades: ["1050"],
       tempers: ["F"],
@@ -1424,7 +1276,7 @@ async function seedProducts() {
       endUseIndustries: ["Steel & Deoxidation Solutions"],
       capabilityApplications: [] as string[],
       highlights: [
-        "Part of HG Steel & Deoxidation Solutions (upcoming)",
+        "Current steel and deoxidation form in the aluminium catalogue",
         "Form for steel plant handling and addition practice",
       ],
       chemicalComposition: [
@@ -1434,7 +1286,7 @@ async function seedProducts() {
       typicalPieceWeightKg: 1,
       standardsNote: "Supply chemistry & form per steel plant specification",
       moqNote: "Monthly allocation programmes — enquire for grade and sizing.",
-      isUpcoming: true,
+      isUpcoming: false,
       description:
         "Aluminium notch bars for steelmaking and metallurgical applications. Part of HG Steel & Deoxidation Solutions.",
     },
@@ -1462,7 +1314,7 @@ async function seedProducts() {
       endUseIndustries: ["Steel & Deoxidation Solutions"],
       capabilityApplications: [] as string[],
       highlights: [
-        "Part of HG Steel & Deoxidation Solutions (upcoming)",
+        "Current steel and deoxidation form in the aluminium catalogue",
         "Form tuned for oxygen control",
         "Sized and packed for steel plant handling",
       ],
@@ -1473,7 +1325,7 @@ async function seedProducts() {
       typicalPieceWeightKg: 1,
       standardsNote: "Supply chemistry & form per steel plant specification",
       moqNote: "Monthly allocation programmes — enquire for grade and sizing.",
-      isUpcoming: true,
+      isUpcoming: false,
       description:
         "Aluminium deoxidizer products for steelmaking and metallurgical deoxidation programmes. Part of HG Steel & Deoxidation Solutions.",
     },
@@ -1482,7 +1334,13 @@ async function seedProducts() {
   const existing = await listProducts({ limit: 200 });
   const ids: string[] = [];
 
-  for (const p of products) {
+  for (const raw of products) {
+    const p = raw as (typeof products)[number] & {
+      minLengthMm?: number;
+      maxWidthMm?: number;
+      weightPerMeterKg?: number;
+      typicalDiameterMm?: number;
+    };
     const found = existing.items.find((x) => x.slug === p.slug);
     const categoryIds = [aluminiumId];
     if (found) {
@@ -1508,9 +1366,7 @@ async function seedProducts() {
         ...(p.maxLengthMm != null ? { maxLengthMm: p.maxLengthMm } : {}),
         ...(p.minLengthMm != null ? { minLengthMm: p.minLengthMm } : {}),
         ...(p.maxWidthMm != null ? { maxWidthMm: p.maxWidthMm } : {}),
-        ...(p.weightPerMeterKg != null
-          ? { weightPerMeterKg: p.weightPerMeterKg }
-          : {}),
+        ...(p.weightPerMeterKg != null ? { weightPerMeterKg: p.weightPerMeterKg } : {}),
         ...(p.typicalDiameterMm != null
           ? { typicalDiameterMm: p.typicalDiameterMm }
           : {}),
@@ -1522,7 +1378,7 @@ async function seedProducts() {
         categoryIds,
         imageUrl: p.imageUrl,
         seo: {
-          title: `${p.name.en} | HG Aluminium Smelters`,
+          title: `${p.name.en} | HG Alutech`,
           description: p.description,
         },
         version: found.version,
@@ -1573,7 +1429,7 @@ async function seedProducts() {
       isUpcoming: p.isUpcoming,
       imageUrl: p.imageUrl,
       seo: {
-        title: `${p.name.en} | HG Aluminium Smelters`,
+        title: `${p.name.en} | HG Alutech`,
         description: p.description,
       },
       status: "draft",
@@ -1589,6 +1445,14 @@ async function seedProducts() {
     if ("error" in linked) throw new Error(JSON.stringify(linked));
     ids.push(linked.product.id);
     console.log(`  + product ${p.slug}`);
+  }
+
+  const keep = new Set(products.map((p) => p.slug));
+  const catalogue = await listProducts({ limit: 100 });
+  for (const item of catalogue.items) {
+    if (keep.has(item.slug)) continue;
+    await softDeleteProduct(item.id);
+    console.log(`  - product ${item.slug}`);
   }
   return ids;
 }
@@ -1607,7 +1471,7 @@ async function seedCmsPages() {
 }
 
 async function main() {
-  console.log("\n=== HG Aluminium realistic seed ===\n");
+  console.log("\n=== HG Alutech realistic seed ===\n");
 
   console.log("1. Dictionaries");
   await seedDictionaries();

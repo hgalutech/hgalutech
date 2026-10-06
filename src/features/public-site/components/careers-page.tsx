@@ -58,9 +58,8 @@ export async function CareersPage({ locale }: { locale: string }) {
               A growing Gujarat manufacturer, not a desk-only brochure
             </h2>
             <p className="text-fs-lead text-muted-foreground mt-3.5 max-w-[42ch]">
-              We hire for the floor and the office — people who can run a
-              press shift, hold a QC gate, keep hydraulics honest, or carry a
-              customer programme.
+              We hire for the floor and the office — people who can run a press shift,
+              hold a QC gate, keep hydraulics honest, or carry a customer programme.
             </p>
             <ul className="mt-8 space-y-5">
               {LIFE.map((item) => (
@@ -84,9 +83,8 @@ export async function CareersPage({ locale }: { locale: string }) {
               Find a team that matches how you work
             </h2>
             <p className="text-fs-lead text-muted-foreground mt-3 max-w-[48ch]">
-              Filter by department, open a role for scope, then apply by email —
-              the same path used by serious industrial employers, without a
-              black-box ATS.
+              Filter by department, open a role for scope, then apply by email — the same
+              path used by serious industrial employers, without a black-box ATS.
             </p>
           </Reveal>
           <div className="mt-8">
@@ -113,18 +111,15 @@ export async function CareersPage({ locale }: { locale: string }) {
         <Container className="max-w-3xl">
           <Reveal>
             <Eyebrow>Open application</Eyebrow>
-            <h2 className="text-fs-h2 mt-2.5 text-balance">
-              Don&apos;t see your role?
-            </h2>
+            <h2 className="text-fs-h2 mt-2.5 text-balance">Don&apos;t see your role?</h2>
             <p className="text-muted-foreground mt-3 text-[1.05rem] leading-relaxed">
-              Capacity and finishing programmes open new seats through the year.
-              Send a short note and CV — we keep strong profiles for matching
-              openings.
+              Capacity and finishing programmes open new seats through the year. Send a
+              short note and CV — we keep strong profiles for matching openings.
             </p>
             <div className="mt-6 flex flex-wrap gap-3">
               {hrEmail ? (
                 <a
-                  href={`mailto:${hrEmail}?subject=${encodeURIComponent("Open application — HG Aluminium")}`}
+                  href={`mailto:${hrEmail}?subject=${encodeURIComponent("Open application — HG Alutech")}`}
                   className="bg-ink hover:bg-ink/90 inline-flex min-h-11 items-center rounded-[var(--radius-md)] px-5 text-[0.875rem] font-semibold text-white transition-colors"
                 >
                   Email HR
@@ -140,7 +135,10 @@ export async function CareersPage({ locale }: { locale: string }) {
             {hrEmail ? (
               <p className="text-muted-foreground mt-4 text-sm">
                 HR:{" "}
-                <a className="font-semibold text-ink hover:underline" href={`mailto:${hrEmail}`}>
+                <a
+                  className="font-semibold text-ink hover:underline"
+                  href={`mailto:${hrEmail}`}
+                >
                   {hrEmail}
                 </a>
               </p>

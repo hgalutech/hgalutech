@@ -3,63 +3,63 @@
     "key": "solar",
     "label": "Solar Energy",
     "description": "Extrusion profiles for solar module frames, mounting rails and structural support systems.",
-    "productFocus": ["aluminium-extrusion-profiles"],
+    "productFocus": ["aluminium-ingots"],
     "applications": ["Solar module frames", "Mounting structures", "Aluminium rails"]
   },
   {
     "key": "architecture",
     "label": "Architecture & Construction",
     "description": "Profiles for doors, windows, curtain walls, façades, partitions and architectural systems.",
-    "productFocus": ["aluminium-extrusion-profiles"],
+    "productFocus": ["aluminium-ingots"],
     "applications": ["Façade profiles", "Window & door sections", "Building systems"]
   },
   {
     "key": "formwork",
     "label": "Aluminium Formwork",
     "description": "High-strength extrusion profiles for reusable formwork and monolithic construction systems.",
-    "productFocus": ["aluminium-extrusion-profiles"],
+    "productFocus": ["aluminium-ingots"],
     "applications": ["Formwork panels", "Beam sections", "Mass housing systems"]
   },
   {
     "key": "industrial",
     "label": "Industrial Engineering",
     "description": "Customized profiles for machine frames, automation, conveyors and industrial structures.",
-    "productFocus": ["aluminium-extrusion-profiles"],
+    "productFocus": ["aluminium-ingots"],
     "applications": ["Machine frames", "Automation", "Conveyor systems"]
   },
   {
     "key": "electrical",
     "label": "Electrical & Power",
     "description": "Profiles for heat sinks, electrical enclosures, LED systems and power electronics.",
-    "productFocus": ["aluminium-extrusion-profiles"],
+    "productFocus": ["aluminium-ingots"],
     "applications": ["Heat sinks", "Electrical enclosures", "Power electronics"]
   },
   {
     "key": "automotive_transport",
     "label": "Automotive & Transportation",
     "description": "Lightweight structural profiles for mobility and electric-vehicle applications.",
-    "productFocus": ["aluminium-extrusion-profiles", "aluminium-ingots"],
+    "productFocus": ["aluminium-ingots"],
     "applications": ["Structural profiles", "EV-related sections", "Transport sections"]
   },
   {
     "key": "railways",
     "label": "Railways & Transport",
     "description": "Lightweight profiles for structural and interior transport applications.",
-    "productFocus": ["aluminium-extrusion-profiles"],
+    "productFocus": ["aluminium-ingots"],
     "applications": ["Railway profiles", "Transport sections"]
   },
   {
     "key": "hvac_cryogenic",
     "label": "HVAC & Cryogenic",
     "description": "Profiles designed for cooling, heat dissipation, ventilation and specialized cryogenic engineering.",
-    "productFocus": ["aluminium-extrusion-profiles"],
+    "productFocus": ["aluminium-ingots"],
     "applications": ["Heat sinks", "HVAC sections", "Thermal management"]
   },
   {
     "key": "extrusion_mfr",
     "label": "Aluminium Extrusion Manufacturers",
     "description": "Homogenized billets engineered for aluminium extrusion manufacturers.",
-    "productFocus": ["aluminium-homogenized-billets"],
+    "productFocus": ["aluminium-ingots"],
     "applications": ["Extrusion billets", "6xxx series programmes"]
   },
   {
@@ -72,8 +72,13 @@
   {
     "key": "steel_deox",
     "label": "Steel & Deoxidation Solutions",
-    "description": "Upcoming cubes, shots, notch bars and deoxidizer products for steelmaking applications.",
-    "productFocus": ["aluminium-deoxidizer", "aluminium-shots", "aluminium-cubes", "aluminium-notch-bars"],
+    "description": "Aluminium cubes, shots, notch bars and deoxidizer products for steelmaking and melt treatment.",
+    "productFocus": [
+      "aluminium-deoxidizer",
+      "aluminium-shots",
+      "aluminium-cubes",
+      "aluminium-notch-bars"
+    ],
     "applications": ["Deoxidizer", "Aluminium shots", "Steel melt additions"]
   }
 ]

@@ -15,7 +15,7 @@ export default async function manifest(): Promise<MetadataRoute.Manifest> {
     name: siteConfig.name,
     short_name: siteConfig.shortName,
     description:
-      "Extrusion profiles, homogenised billets and remelt alloys from HG Aluminium Smelters, Kadi, Gujarat.",
+      "Aluminium ingots, cubes, shots, notch bars and deoxidizer products from HG Alutech, Kadi, Gujarat.",
     start_url: "/en",
     scope: "/",
     display: "standalone",

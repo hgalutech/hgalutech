@@ -5,12 +5,7 @@
 import { loadEnvLocal } from "./load-env-local";
 loadEnvLocal();
 
-import {
-  createPage,
-  getPageBySlug,
-  publishPage,
-  type BlockType,
-} from "@/modules/cms";
+import { createPage, getPageBySlug, publishPage, type BlockType } from "@/modules/cms";
 
 type Shell = {
   slug: string;
@@ -28,14 +23,44 @@ type Shell = {
 const shells: Shell[] = [
   {
     slug: "about",
-    title: "About HG Aluminium",
-    description: "About HG Aluminium Smelters Limited",
+    title: "About HG Alutech",
+    description: "About HG Alutech",
     blocks: [
-      { id: "a-facts", type: "company-facts", order: 0, appearance: "default", data: { seeded: true } },
-      { id: "a-stats", type: "stats", order: 1, appearance: "default", data: { seeded: true } },
-      { id: "a-lead", type: "leadership-grid", order: 2, appearance: "default", data: { seeded: true } },
-      { id: "a-certs", type: "cert-grid", order: 3, appearance: "default", data: { seeded: true } },
-      { id: "a-exp", type: "expansion-roadmap", order: 4, appearance: "default", data: { seeded: true } },
+      {
+        id: "a-facts",
+        type: "company-facts",
+        order: 0,
+        appearance: "default",
+        data: { seeded: true },
+      },
+      {
+        id: "a-stats",
+        type: "stats",
+        order: 1,
+        appearance: "default",
+        data: { seeded: true },
+      },
+      {
+        id: "a-lead",
+        type: "leadership-grid",
+        order: 2,
+        appearance: "default",
+        data: { seeded: true },
+      },
+      {
+        id: "a-certs",
+        type: "cert-grid",
+        order: 3,
+        appearance: "default",
+        data: { seeded: true },
+      },
+      {
+        id: "a-exp",
+        type: "expansion-roadmap",
+        order: 4,
+        appearance: "default",
+        data: { seeded: true },
+      },
     ],
   },
   {
@@ -43,8 +68,20 @@ const shells: Shell[] = [
     title: "Our Journey",
     description: "Company journey and milestones",
     blocks: [
-      { id: "j-facts", type: "company-facts", order: 0, appearance: "default", data: { seeded: true } },
-      { id: "j-stats", type: "stats", order: 1, appearance: "default", data: { seeded: true } },
+      {
+        id: "j-facts",
+        type: "company-facts",
+        order: 0,
+        appearance: "default",
+        data: { seeded: true },
+      },
+      {
+        id: "j-stats",
+        type: "stats",
+        order: 1,
+        appearance: "default",
+        data: { seeded: true },
+      },
     ],
   },
   {
@@ -52,8 +89,20 @@ const shells: Shell[] = [
     title: "Industries & Applications",
     description: "Markets we serve",
     blocks: [
-      { id: "i-stats", type: "stats", order: 0, appearance: "default", data: { seeded: true } },
-      { id: "i-gallery", type: "gallery", order: 1, appearance: "default", data: { seeded: true } },
+      {
+        id: "i-stats",
+        type: "stats",
+        order: 0,
+        appearance: "default",
+        data: { seeded: true },
+      },
+      {
+        id: "i-gallery",
+        type: "gallery",
+        order: 1,
+        appearance: "default",
+        data: { seeded: true },
+      },
     ],
   },
   {
@@ -61,8 +110,20 @@ const shells: Shell[] = [
     title: "Manufacturing & Infrastructure",
     description: "Plant and infrastructure",
     blocks: [
-      { id: "m-stats", type: "stats", order: 0, appearance: "default", data: { seeded: true } },
-      { id: "m-certs", type: "cert-grid", order: 1, appearance: "default", data: { seeded: true } },
+      {
+        id: "m-stats",
+        type: "stats",
+        order: 0,
+        appearance: "default",
+        data: { seeded: true },
+      },
+      {
+        id: "m-certs",
+        type: "cert-grid",
+        order: 1,
+        appearance: "default",
+        data: { seeded: true },
+      },
     ],
   },
   {
@@ -70,8 +131,20 @@ const shells: Shell[] = [
     title: "Quality & Certifications",
     description: "Quality systems",
     blocks: [
-      { id: "q-certs", type: "cert-grid", order: 0, appearance: "default", data: { seeded: true } },
-      { id: "q-facts", type: "company-facts", order: 1, appearance: "default", data: { seeded: true } },
+      {
+        id: "q-certs",
+        type: "cert-grid",
+        order: 0,
+        appearance: "default",
+        data: { seeded: true },
+      },
+      {
+        id: "q-facts",
+        type: "company-facts",
+        order: 1,
+        appearance: "default",
+        data: { seeded: true },
+      },
     ],
   },
   {
@@ -93,7 +166,13 @@ const shells: Shell[] = [
     title: "Global Procurement & Export",
     description: "Procurement and export",
     blocks: [
-      { id: "p-facts", type: "company-facts", order: 0, appearance: "default", data: { seeded: true } },
+      {
+        id: "p-facts",
+        type: "company-facts",
+        order: 0,
+        appearance: "default",
+        data: { seeded: true },
+      },
     ],
   },
   {
@@ -101,7 +180,13 @@ const shells: Shell[] = [
     title: "Careers",
     description: "Careers at HG",
     blocks: [
-      { id: "c-facts", type: "company-facts", order: 0, appearance: "default", data: { seeded: true } },
+      {
+        id: "c-facts",
+        type: "company-facts",
+        order: 0,
+        appearance: "default",
+        data: { seeded: true },
+      },
     ],
   },
   {
@@ -109,7 +194,13 @@ const shells: Shell[] = [
     title: "Resources / Downloads",
     description: "Resources",
     blocks: [
-      { id: "r-certs", type: "cert-grid", order: 0, appearance: "default", data: { seeded: true } },
+      {
+        id: "r-certs",
+        type: "cert-grid",
+        order: 0,
+        appearance: "default",
+        data: { seeded: true },
+      },
     ],
   },
   {
@@ -117,7 +208,13 @@ const shells: Shell[] = [
     title: "Contact Us / RFQ",
     description: "Contact and RFQ",
     blocks: [
-      { id: "ct-facts", type: "company-facts", order: 0, appearance: "default", data: { seeded: true } },
+      {
+        id: "ct-facts",
+        type: "company-facts",
+        order: 0,
+        appearance: "default",
+        data: { seeded: true },
+      },
     ],
   },
   {
@@ -125,8 +222,20 @@ const shells: Shell[] = [
     title: "Aluminium Billets",
     description: "Extrusion-ready billets",
     blocks: [
-      { id: "b-stats", type: "stats", order: 0, appearance: "default", data: { seeded: true } },
-      { id: "b-certs", type: "cert-grid", order: 1, appearance: "default", data: { seeded: true } },
+      {
+        id: "b-stats",
+        type: "stats",
+        order: 0,
+        appearance: "default",
+        data: { seeded: true },
+      },
+      {
+        id: "b-certs",
+        type: "cert-grid",
+        order: 1,
+        appearance: "default",
+        data: { seeded: true },
+      },
     ],
   },
   {
@@ -134,8 +243,20 @@ const shells: Shell[] = [
     title: "Ingots & Alloys",
     description: "Remelt ingots and alloys",
     blocks: [
-      { id: "ia-stats", type: "stats", order: 0, appearance: "default", data: { seeded: true } },
-      { id: "ia-certs", type: "cert-grid", order: 1, appearance: "default", data: { seeded: true } },
+      {
+        id: "ia-stats",
+        type: "stats",
+        order: 0,
+        appearance: "default",
+        data: { seeded: true },
+      },
+      {
+        id: "ia-certs",
+        type: "cert-grid",
+        order: 1,
+        appearance: "default",
+        data: { seeded: true },
+      },
     ],
   },
   {
@@ -143,8 +264,20 @@ const shells: Shell[] = [
     title: "Extrusion Profiles",
     description: "Aluminium extrusion profiles",
     blocks: [
-      { id: "ep-stats", type: "stats", order: 0, appearance: "default", data: { seeded: true } },
-      { id: "ep-certs", type: "cert-grid", order: 1, appearance: "default", data: { seeded: true } },
+      {
+        id: "ep-stats",
+        type: "stats",
+        order: 0,
+        appearance: "default",
+        data: { seeded: true },
+      },
+      {
+        id: "ep-certs",
+        type: "cert-grid",
+        order: 1,
+        appearance: "default",
+        data: { seeded: true },
+      },
     ],
   },
 ];

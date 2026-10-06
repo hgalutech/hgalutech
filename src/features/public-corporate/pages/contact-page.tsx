@@ -38,14 +38,11 @@ export async function ContactPage({
   const exportEmail = profile?.emails?.export?.trim() || "";
   const phones = profile?.phones?.filter((p) => p.number?.trim()) ?? [];
   const officeAddress =
-    formatAddress(profile?.registeredOffice) ||
-    formatAddress(profile?.factoryAddress);
+    formatAddress(profile?.registeredOffice) || formatAddress(profile?.factoryAddress);
   const locations =
-    profile?.locations?.filter((l) => l.embedUrl || l.mapsUrl || l.address) ??
-    [];
+    profile?.locations?.filter((l) => l.embedUrl || l.mapsUrl || l.address) ?? [];
   const fallbackQuery =
-    profile?.registeredOffice?.line1 ||
-    "Laxmipura Nandasan Kadi Mahesana Gujarat";
+    profile?.registeredOffice?.line1 || "Laxmipura Nandasan Kadi Mahesana Gujarat";
   const primaryLocation =
     locations[0] ??
     ({
@@ -62,14 +59,14 @@ export async function ContactPage({
       <header className="border-line border-b bg-bg">
         <Container className="py-[clamp(1.35rem,3vw,2rem)]">
           <p className="text-[0.7rem] font-bold tracking-[0.14em] text-brand-red uppercase">
-            HG Aluminium
+            HG Alutech
           </p>
           <h1 className="font-display mt-1.5 text-[clamp(1.5rem,1.2rem+1.2vw,2rem)] font-semibold tracking-tight text-ink">
             Contact
           </h1>
           <p className="text-muted-foreground mt-2 max-w-[36rem] text-[0.9375rem] leading-relaxed">
-            Share alloy, geometry and volume — we confirm feasibility and lead
-            time before a commercial offer.
+            Share alloy, geometry and volume — we confirm feasibility and lead time before
+            a commercial offer.
           </p>
         </Container>
       </header>
@@ -92,8 +89,8 @@ export async function ContactPage({
                 className="border-line rounded-[var(--radius-lg)] border bg-surface p-4 shadow-[var(--shadow-sm)] sm:p-5"
               />
               <p className="text-muted-foreground mt-4 text-[0.8125rem] leading-relaxed">
-                Feasibility first, quote second — the same cadence industrial
-                buyers expect.
+                Feasibility first, quote second — the same cadence industrial buyers
+                expect.
               </p>
             </Reveal>
 
@@ -101,9 +98,7 @@ export async function ContactPage({
               <Reveal className="border-line space-y-5 rounded-[var(--radius-lg)] border bg-bg-alt/50 p-4 sm:p-5">
                 <div>
                   <h2 className="font-display text-base font-semibold text-ink">
-                    {profile?.displayNames?.primary ||
-                      profile?.legalName ||
-                      "HG Aluminium"}
+                    {profile?.displayNames?.primary || profile?.legalName || "HG Alutech"}
                   </h2>
                   {profile?.legalName &&
                   profile.legalName !== profile.displayNames?.primary ? (

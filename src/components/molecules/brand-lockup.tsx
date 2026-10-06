@@ -24,8 +24,7 @@ function clampHeight(n: number | undefined): number {
 
 /** Prefer a transparent PNG delivery for Cloudinary uploads (no baked plate). */
 function displayLogoSrc(src: string): string {
-  const m =
-    /^(https:\/\/res\.cloudinary\.com\/[^/]+\/image\/upload\/)(.*)$/i.exec(src);
+  const m = /^(https:\/\/res\.cloudinary\.com\/[^/]+\/image\/upload\/)(.*)$/i.exec(src);
   if (!m) return src;
   const [, prefix, rest] = m;
   if (/e_make_transparent|e_background_removal|b_transparent/i.test(src)) {
@@ -36,12 +35,7 @@ function displayLogoSrc(src: string): string {
 }
 
 /** Fluid-width lockup — logo only, no background plate. */
-export function BrandLockup({
-  href,
-  className,
-  src,
-  heightPx,
-}: BrandLockupProps) {
+export function BrandLockup({ href, className, src, heightPx }: BrandLockupProps) {
   const h = clampHeight(heightPx);
   const raw = src?.trim() || FALLBACK_BRAND_ICON;
   const imageSrc = displayLogoSrc(raw);
@@ -51,7 +45,7 @@ export function BrandLockup({
     <Link
       href={href}
       className={cn("inline-flex min-w-0 shrink items-center", className)}
-      aria-label="HG Aluminium Smelters Limited home"
+      aria-label="HG Alutech home"
     >
       <span
         className="relative inline-flex items-center justify-center overflow-hidden bg-transparent"
@@ -59,7 +53,7 @@ export function BrandLockup({
       >
         <Image
           src={imageSrc}
-          alt="HG Aluminium Smelters Limited"
+          alt="HG Alutech"
           width={maxW * 2}
           height={h * 2}
           priority

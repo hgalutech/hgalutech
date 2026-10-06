@@ -21,7 +21,7 @@ const spaceGrotesk = Space_Grotesk({
 });
 
 const APP_DESCRIPTION =
-  "HG Aluminium Smelters Ltd. — extrusion profiles, homogenised billets and remelt alloys from Kadi, Gujarat.";
+  "HG Alutech — aluminium ingots, cubes, shots, notch bars and deoxidizer products from Kadi, Gujarat.";
 
 export async function generateMetadata(): Promise<Metadata> {
   const logoSrc = (await resolveBrandLogoSrc()) || FALLBACK_BRAND_ICON;
@@ -81,9 +81,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${inter.variable} ${spaceGrotesk.variable} antialiased`}
-      >
+      <body className={`${inter.variable} ${spaceGrotesk.variable} antialiased`}>
         {children}
       </body>
     </html>

@@ -60,9 +60,7 @@ export type CmsBlock = {
   data: unknown;
 };
 
-async function hydrateProductsBlock(
-  content: HomeContent["products"],
-): Promise<{
+async function hydrateProductsBlock(content: HomeContent["products"]): Promise<{
   content: HomeContent["products"];
   groups: CategoryWithProducts[];
 }> {
@@ -102,11 +100,11 @@ function parseUpcomingCopy(data: unknown): {
       ? (data as Record<string, unknown>)
       : {};
   return {
-    eyebrow: typeof d.eyebrow === "string" && d.eyebrow ? d.eyebrow : "Steel & Deoxidation Solutions",
-    title:
-      typeof d.title === "string" && d.title
-        ? d.title
-        : "Upcoming products",
+    eyebrow:
+      typeof d.eyebrow === "string" && d.eyebrow
+        ? d.eyebrow
+        : "Steel & Deoxidation Solutions",
+    title: typeof d.title === "string" && d.title ? d.title : "Upcoming products",
     description:
       typeof d.description === "string"
         ? d.description
@@ -114,9 +112,7 @@ function parseUpcomingCopy(data: unknown): {
   };
 }
 
-async function hydrateCustomersBlock(
-  content: HomeContent["customers"],
-): Promise<{
+async function hydrateCustomersBlock(content: HomeContent["customers"]): Promise<{
   content: HomeContent["customers"];
   items: Array<{ id: string; name: string; imageUrl: string | null }>;
 }> {
@@ -195,9 +191,7 @@ async function hydrateMarketsSegments(): Promise<IndustrySegment[]> {
     const mapped = items
       .map((raw, i) => {
         const row =
-          raw && typeof raw === "object"
-            ? (raw as Record<string, unknown>)
-            : {};
+          raw && typeof raw === "object" ? (raw as Record<string, unknown>) : {};
         const label = typeof row.label === "string" ? row.label.trim() : "";
         if (!label) return null;
         const applications = Array.isArray(row.applications)
@@ -206,8 +200,7 @@ async function hydrateMarketsSegments(): Promise<IndustrySegment[]> {
         return {
           key: `cms-${i}-${label.toLowerCase().replace(/\s+/g, "-")}`,
           label,
-          description:
-            typeof row.description === "string" ? row.description : "",
+          description: typeof row.description === "string" ? row.description : "",
           productFocus: [] as string[],
           applications,
         } satisfies IndustrySegment;
@@ -225,17 +218,14 @@ function parseMarketsCopy(data: unknown): {
   title: string;
   description: string;
 } {
-  const d =
-    data && typeof data === "object"
-      ? (data as Record<string, unknown>)
-      : {};
+  const d = data && typeof data === "object" ? (data as Record<string, unknown>) : {};
   return {
     eyebrow: typeof d.eyebrow === "string" ? d.eyebrow : "Markets",
     title: typeof d.title === "string" ? d.title : "Markets we serve",
     description:
       typeof d.description === "string"
         ? d.description
-        : "Application sectors shaped by extrusion, billet and remelt demand.",
+        : "Application sectors for ingots and steel-deoxidation forms.",
   };
 }
 
@@ -266,16 +256,11 @@ export async function renderCmsBlock(
     switch (block.type) {
       case "hero":
         return wrap(
-          <HeroCarousel
-            locale={locale}
-            content={normalizeHeroContent(block.data)}
-          />,
+          <HeroCarousel locale={locale} content={normalizeHeroContent(block.data)} />,
         );
       case "capability":
         return wrap(
-          <CapabilitySection
-            content={block.data as HomeContent["capability"]}
-          />,
+          <CapabilitySection content={block.data as HomeContent["capability"]} />,
         );
       case "products": {
         const hydrated = await hydrateProductsBlock(
@@ -359,9 +344,7 @@ export async function renderCmsBlock(
         );
       case "joint-ventures":
         return wrap(
-          <JointVenturesSection
-            content={block.data as HomeContent["jointVentures"]}
-          />,
+          <JointVenturesSection content={block.data as HomeContent["jointVentures"]} />,
         );
       case "careers-teaser":
         return wrap(
@@ -371,9 +354,7 @@ export async function renderCmsBlock(
           />,
         );
       case "faq":
-        return wrap(
-          <FaqSection content={block.data as HomeContent["faq"]} />,
-        );
+        return wrap(<FaqSection content={block.data as HomeContent["faq"]} />);
       case "page-intro":
         return wrap(<PageIntroBlock locale={locale} data={block.data} />);
       case "pillar-list":
@@ -381,9 +362,7 @@ export async function renderCmsBlock(
       case "timeline":
         return wrap(<TimelineBlock locale={locale} data={block.data} />);
       case "numbered-steps":
-        return wrap(
-          <NumberedStepsBlock locale={locale} data={block.data} />,
-        );
+        return wrap(<NumberedStepsBlock locale={locale} data={block.data} />);
       case "resource-list":
         return wrap(<ResourceListBlock locale={locale} data={block.data} />);
       case "industry-list":
@@ -405,10 +384,10 @@ export async function renderCmsBlock(
         return wrap(<ExpansionRoadmapBlock locale={locale} />);
       default:
         return <SoftFail key={block.id} type={block.type} locale={locale} />;
-      }
-    } catch {
-      return <SoftFail key={block.id} type={block.type} locale={locale} />;
     }
+  } catch {
+    return <SoftFail key={block.id} type={block.type} locale={locale} />;
+  }
 }
 
 export async function CmsPageBlocks({
@@ -419,9 +398,7 @@ export async function CmsPageBlocks({
   locale: string;
 }) {
   const ordered = [...blocks].sort((a, b) => a.order - b.order);
-  const nodes = await Promise.all(
-    ordered.map((b) => renderCmsBlock(b, locale)),
-  );
+  const nodes = await Promise.all(ordered.map((b) => renderCmsBlock(b, locale)));
   const hasCtaBanner = ordered.some((b) => b.type === "cta-banner");
   return (
     <>

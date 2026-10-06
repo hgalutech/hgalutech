@@ -36,8 +36,8 @@ export const localeDefault = "en" as const;
 
 /** Every built public page slug (no invented routes). */
 export const publicPages = [
-  { slug: "", title: "Home", description: "HG Aluminium Smelters home" },
-  { slug: "about", title: "About HG", description: "About HG Aluminium Smelters" },
+  { slug: "", title: "Home", description: "HG Alutech home" },
+  { slug: "about", title: "About HG", description: "About HG Alutech" },
   {
     slug: "journey",
     title: "Our Journey",
@@ -119,20 +119,8 @@ export const productNavAllowlist: NavLink[] = [
   {
     label: "Aluminium",
     href: "products/category/aluminium",
-    description: "Billets, profiles, ingots & specialised lines",
+    description: "Ingots, cubes, shots, notch bars and deoxidizer",
     icon: "ingot",
-  },
-  {
-    label: "Extrusion Profiles",
-    href: "products/aluminium-extrusion-profiles",
-    description: "Architectural, solar and industrial sections",
-    icon: "recycle",
-  },
-  {
-    label: "Homogenised Billets",
-    href: "products/aluminium-homogenized-billets",
-    description: "Extrusion-ready billets for profile makers",
-    icon: "billet",
   },
   {
     label: "Aluminium Ingots",
@@ -277,7 +265,7 @@ export const footerQuickLinks: NavLink[] = [
 export const footerContactFallback = {
   address:
     "Survey No. 671/3, Laxmipura Nandasan, Rajpur, Kadi, Mahesana, Gujarat – 384450, India",
-  email: "sales@hgaluminium.com",
+  email: "sales@hgalutech.com",
   phone: "+91 2764 000000",
   mapsUrl:
     "https://www.google.com/maps/search/?api=1&query=Laxmipura+Nandasan+Kadi+Mahesana",

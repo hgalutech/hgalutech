@@ -26,9 +26,7 @@ function resendClient() {
 }
 
 function fromAddress() {
-  return (
-    process.env.RESEND_FROM?.trim() || "HG Aluminium <onboarding@resend.dev>"
-  );
+  return process.env.RESEND_FROM?.trim() || "HG Alutech <onboarding@resend.dev>";
 }
 
 function escapeHtml(s: string) {
@@ -119,9 +117,7 @@ export async function notifyEnquiryEmails(opts: {
       if (error) errors.push(`sales: ${error.message}`);
       else salesSent = true;
     } catch (err) {
-      errors.push(
-        `sales: ${err instanceof Error ? err.message : "send failed"}`,
-      );
+      errors.push(`sales: ${err instanceof Error ? err.message : "send failed"}`);
     }
   } else {
     errors.push("No sales inbox configured (Company profile → sales email)");
@@ -137,9 +133,7 @@ export async function notifyEnquiryEmails(opts: {
     if (error) errors.push(`buyer: ${error.message}`);
     else buyerSent = true;
   } catch (err) {
-    errors.push(
-      `buyer: ${err instanceof Error ? err.message : "send failed"}`,
-    );
+    errors.push(`buyer: ${err instanceof Error ? err.message : "send failed"}`);
   }
 
   return { salesSent, buyerSent, errors };

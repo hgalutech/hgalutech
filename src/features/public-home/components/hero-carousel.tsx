@@ -6,12 +6,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { ArrowLeft, ArrowRight, Pause, Play } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { localePath } from "@/config/nav.config";
 import type { HomeContent } from "@/features/public-home/content/home.en";
 import { cn } from "@/lib/utils";
@@ -194,8 +189,7 @@ export function HeroCarousel({ locale, content }: HeroCarouselProps) {
                               ? `hero-progress ${AUTOPLAY_MS}ms linear forwards`
                               : undefined,
                             animationPlayState: playing ? "running" : "paused",
-                          }
-                          }
+                          }}
                         />
                       ) : (
                         <span
@@ -269,10 +263,21 @@ export function HeroCarousel({ locale, content }: HeroCarouselProps) {
                 autoPlay
                 poster={videoPoster || undefined}
               >
-                <source src={videoSrc} type="video/mp4" />
+                <source
+                  src={videoSrc}
+                  type={
+                    videoSrc.toLowerCase().includes(".webm") ? "video/webm" : "video/mp4"
+                  }
+                />
               </video>
             ) : null}
           </div>
+          {videoSrc.includes("alumina-process") ? (
+            <p className="px-4 py-3 text-left text-xs leading-relaxed text-white/75">
+              Alumina treatment at National Aluminium Company, Odisha. Footage by
+              Subhashish Panigrahi, CC BY-SA 3.0. This is not the Kadi plant.
+            </p>
+          ) : null}
         </DialogContent>
       </Dialog>
     </section>
