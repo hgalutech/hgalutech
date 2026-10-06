@@ -30,8 +30,18 @@ export async function dbConnect(): Promise<typeof mongoose | null> {
     cached.promise = mongoose.connect(uri).then((m) => m);
   }
 
-  cached.conn = await cached.promise;
-  return cached.conn;
+  try {
+    cached.conn = await cached.promise;
+    return cached.conn;
+  } catch (error) {
+    cached.promise = null;
+    cached.conn = null;
+    console.error(
+      "[db] connection failed:",
+      error instanceof Error ? error.message : error,
+    );
+    return null;
+  }
 }
 
 export async function pingMongo(): Promise<boolean> {
