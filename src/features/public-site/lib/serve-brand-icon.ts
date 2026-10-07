@@ -1,5 +1,7 @@
-import { resolveBrandLogoSrc } from "@/features/public-site/lib/brand-logo";
-import { FALLBACK_BRAND_ICON } from "@/lib/brand";
+import { readFile } from "node:fs/promises";
+import path from "node:path";
+
+import { PWA_ICON_SRC } from "@/lib/brand";
 
 function siteOrigin(): string {
   const raw =
@@ -53,17 +55,30 @@ async function fetchImage(url: string): Promise<Response | null> {
   }
 }
 
+async function readPackagedIcon(): Promise<Response | null> {
+  try {
+    const file = path.join(process.cwd(), "public", "icons", "icon-512x512.png");
+    const bytes = await readFile(file);
+    return new Response(bytes, {
+      headers: {
+        "Content-Type": "image/png",
+        "Cache-Control": "public, max-age=86400",
+      },
+    });
+  } catch {
+    return null;
+  }
+}
+
 /**
- * Serve the same brand logo as header/footer for /icon and /apple-icon.
- * Uses HTTP fetch (not fs) so it works on Vercel serverless.
- * Returns raw image bytes — not ImageResponse — so large PNGs are not mangled.
+ * Favicon and Apple touch icon. Always the packaged HG Alutek square,
+ * so a stored company logo cannot put the old mark on the installed app.
  */
 export async function serveBrandIconResponse(size = 64): Promise<Response> {
-  const cms = await resolveBrandLogoSrc();
-  const candidates = [
-    cms ? iconFetchUrl(cms, size) : null,
-    iconFetchUrl(FALLBACK_BRAND_ICON, size),
-  ].filter(Boolean) as string[];
+  const packaged = await readPackagedIcon();
+  if (packaged) return packaged;
+
+  const candidates = [iconFetchUrl(PWA_ICON_SRC, size)];
 
   for (const url of candidates) {
     const res = await fetchImage(url);

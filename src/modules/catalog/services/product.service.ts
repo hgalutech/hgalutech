@@ -75,10 +75,9 @@ function toDTO(doc: Record<string, unknown>): ProductDTO {
       : null,
     publishedVersion: (doc.publishedVersion as unknown) ?? null,
     isUpcoming: Boolean(doc.isUpcoming),
+    sortOrder: Number(doc.sortOrder ?? 0),
     version: Number(doc.version ?? 1),
-    deletedAt: doc.deletedAt
-      ? new Date(doc.deletedAt as string).toISOString()
-      : null,
+    deletedAt: doc.deletedAt ? new Date(doc.deletedAt as string).toISOString() : null,
     createdAt: new Date(doc.createdAt as string).toISOString(),
     updatedAt: new Date(doc.updatedAt as string).toISOString(),
   };
@@ -114,17 +113,12 @@ export async function listProducts(opts: {
     .limit(limit + 1)
     .lean();
   const hasMore = rows.length > limit;
-  const items = rows
-    .slice(0, limit)
-    .map((r) => toDTO(r as Record<string, unknown>));
+  const items = rows.slice(0, limit).map((r) => toDTO(r as Record<string, unknown>));
   const nextCursor = hasMore ? items[items.length - 1]?.id : null;
   return { items, nextCursor };
 }
 
-export async function getProductById(
-  id: string,
-  opts?: { includeDeleted?: boolean },
-) {
+export async function getProductById(id: string, opts?: { includeDeleted?: boolean }) {
   await requireDb();
   const filter: Record<string, unknown> = { _id: id };
   if (!opts?.includeDeleted) filter.deletedAt = null;
@@ -133,15 +127,17 @@ export async function getProductById(
   return toDTO(doc as Record<string, unknown>);
 }
 
-export async function listPublishedProducts(opts: {
-  q?: string;
-  cursor?: string;
-  limit?: number;
-  categoryId?: string;
-  categoryIds?: string[];
-  /** default present only; true = upcoming; "all" = both */
-  upcoming?: boolean | "all";
-} = {}) {
+export async function listPublishedProducts(
+  opts: {
+    q?: string;
+    cursor?: string;
+    limit?: number;
+    categoryId?: string;
+    categoryIds?: string[];
+    /** default present only; true = upcoming; "all" = both */
+    upcoming?: boolean | "all";
+  } = {},
+) {
   await requireDb();
   const limit = Math.min(opts.limit ?? 20, 100);
   const filter: Record<string, unknown> = {
@@ -172,16 +168,29 @@ export async function listPublishedProducts(opts: {
     filter.categoryIds = { $in: catIds };
   }
   if (opts.cursor) {
-    filter._id = { $lt: opts.cursor };
+    const cursorDoc = await Product.findById(opts.cursor).select({ sortOrder: 1 }).lean();
+    const cursorOrder = Number(
+      (cursorDoc as { sortOrder?: number } | null)?.sortOrder ?? 0,
+    );
+    const page = {
+      $or: [
+        { sortOrder: { $gt: cursorOrder } },
+        { sortOrder: cursorOrder, _id: { $gt: opts.cursor } },
+      ],
+    };
+    if (filter.$or) {
+      filter.$and = [{ $or: filter.$or }, page];
+      delete filter.$or;
+    } else {
+      Object.assign(filter, page);
+    }
   }
   const rows = await Product.find(filter)
-    .sort({ _id: -1 })
+    .sort({ sortOrder: 1, _id: 1 })
     .limit(limit + 1)
     .lean();
   const hasMore = rows.length > limit;
-  const items = rows
-    .slice(0, limit)
-    .map((r) => toDTO(r as Record<string, unknown>));
+  const items = rows.slice(0, limit).map((r) => toDTO(r as Record<string, unknown>));
   const nextCursor = hasMore ? items[items.length - 1]?.id : null;
   return { items, nextCursor };
 }
@@ -202,9 +211,7 @@ export async function getPublishedProductBySlug(slug: string) {
   return toDTO(doc as Record<string, unknown>);
 }
 
-export async function createProduct(
-  input: z.input<typeof createProductSchema>,
-) {
+export async function createProduct(input: z.input<typeof createProductSchema>) {
   const data = createProductSchema.parse(input);
   await requireDb();
   const doc = await Product.create({
@@ -232,19 +239,13 @@ export async function updateProduct(
   assertVersionMatch(existing.version, data.version);
 
   const oldSlug = existing.slug;
-  const {
-    version: _v,
-    createRedirectOnSlugChange,
-    ...fields
-  } = data;
+  const { version: _v, createRedirectOnSlugChange, ...fields } = data;
 
   for (const [key, value] of Object.entries(fields)) {
     if (value === undefined) continue;
     if (!providedKeys.has(key)) continue;
     if (key === "scheduledPublishAt") {
-      existing.scheduledPublishAt = value
-        ? new Date(value as string)
-        : null;
+      existing.scheduledPublishAt = value ? new Date(value as string) : null;
       continue;
     }
     (existing as unknown as Record<string, unknown>)[key] = value;
@@ -262,8 +263,7 @@ export async function updateProduct(
     const upcoming = Boolean(existing.isUpcoming);
     const hasImage = Boolean(
       (typeof existing.imageUrl === "string" && existing.imageUrl.trim()) ||
-        (typeof existing.imageMediaId === "string" &&
-          existing.imageMediaId.trim()),
+      (typeof existing.imageMediaId === "string" && existing.imageMediaId.trim()),
     );
     if (!upcoming && !hasImage) {
       return {

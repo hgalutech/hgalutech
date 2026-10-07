@@ -2,8 +2,11 @@
  * Brand asset constants — safe for components + features (no DB).
  */
 
-/** Packaged mark when CMS logo is empty (header / footer / favicon fallback). */
-export const FALLBACK_BRAND_ICON = "/HGLogo.jpeg";
+/** Wide lockup when the CMS logo is empty (header / footer). */
+export const FALLBACK_BRAND_ICON = "/brand/hg-alutek-logo.png";
+
+/** Square mark used by the installed PWA and favicon routes. */
+export const PWA_ICON_SRC = "/icons/icon-512x512.png";
 
 /**
  * Same resolution as header / footer BrandLockup:

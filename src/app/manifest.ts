@@ -1,16 +1,8 @@
 import type { MetadataRoute } from "next";
 
 import { siteConfig } from "@/config/site.config";
-import {
-  FALLBACK_BRAND_ICON,
-  resolveBrandLogoSrc,
-} from "@/features/public-site/lib/brand-logo";
 
-export const dynamic = "force-dynamic";
-
-export default async function manifest(): Promise<MetadataRoute.Manifest> {
-  const logoSrc = (await resolveBrandLogoSrc()) || FALLBACK_BRAND_ICON;
-
+export default function manifest(): MetadataRoute.Manifest {
   return {
     name: siteConfig.name,
     short_name: siteConfig.shortName,
@@ -25,37 +17,25 @@ export default async function manifest(): Promise<MetadataRoute.Manifest> {
     categories: ["business", "manufacturing"],
     icons: [
       {
-        src: logoSrc,
-        sizes: "any",
-        type: /\.svg(\?|$)/i.test(logoSrc) ? "image/svg+xml" : "image/png",
-        purpose: "any",
-      },
-      {
-        src: "/icon",
-        sizes: "32x32",
-        type: "image/png",
-        purpose: "any",
-      },
-      {
-        src: "/icons/icon-192x192.png",
+        src: "/icons/icon-192x192.png?v=alutek",
         sizes: "192x192",
         type: "image/png",
         purpose: "any",
       },
       {
-        src: "/icons/icon-512x512.png",
+        src: "/icons/icon-512x512.png?v=alutek",
         sizes: "512x512",
         type: "image/png",
         purpose: "any",
       },
       {
-        src: "/icons/maskable-192x192.png",
+        src: "/icons/maskable-192x192.png?v=alutek",
         sizes: "192x192",
         type: "image/png",
         purpose: "maskable",
       },
       {
-        src: "/icons/maskable-512x512.png",
+        src: "/icons/maskable-512x512.png?v=alutek",
         sizes: "512x512",
         type: "image/png",
         purpose: "maskable",

@@ -21,12 +21,7 @@ export type CategoryDTO = {
 };
 
 export type ProductFormType =
-  | "extrusion"
-  | "billet"
-  | "ingot"
-  | "remelt"
-  | "deoxidizer"
-  | "other";
+  "extrusion" | "billet" | "ingot" | "remelt" | "deoxidizer" | "other";
 
 export type ChemicalCompositionRow = {
   element: string;
@@ -78,6 +73,8 @@ export type ProductDTO = {
   publishedAt: string | null;
   publishedVersion: unknown | null;
   isUpcoming: boolean;
+  /** Public catalogue order. Lower comes first. */
+  sortOrder: number;
   version: number;
   deletedAt: string | null;
   createdAt: string;

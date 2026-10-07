@@ -36,6 +36,7 @@ const sample: ProductDTO = {
   publishedAt: null,
   publishedVersion: null,
   isUpcoming: false,
+  sortOrder: 0,
   version: 1,
   deletedAt: null,
   createdAt: new Date().toISOString(),

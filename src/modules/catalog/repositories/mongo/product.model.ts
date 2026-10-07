@@ -5,9 +5,7 @@ const productSchema = new Schema(
     sku: { type: String, required: true, trim: true },
     name: { type: Map, of: String, required: true },
     slug: { type: String, required: true, trim: true },
-    categoryIds: [
-      { type: Schema.Types.ObjectId, ref: "Category", index: true },
-    ],
+    categoryIds: [{ type: Schema.Types.ObjectId, ref: "Category", index: true }],
     formType: {
       type: String,
       enum: ["extrusion", "billet", "ingot", "remelt", "deoxidizer", "other"],
@@ -60,6 +58,8 @@ const productSchema = new Schema(
     publishedAt: { type: Date, default: null },
     publishedVersion: { type: Schema.Types.Mixed, default: null },
     isUpcoming: { type: Boolean, default: false, index: true },
+    /** Public catalogue order. Lower comes first. Ingots are 0. */
+    sortOrder: { type: Number, default: 0, index: true },
     version: { type: Number, default: 1 },
     deletedAt: { type: Date, default: null, index: true },
   },

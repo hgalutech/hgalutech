@@ -19,7 +19,12 @@ export function groupProductsByCategory(
 
   return published.map((category) => ({
     category,
-    products: categorized.filter((p) => p.categoryIds.includes(category.id)),
+    products: categorized
+      .filter((p) => p.categoryIds.includes(category.id))
+      .sort(
+        (a, b) =>
+          (a.sortOrder ?? 0) - (b.sortOrder ?? 0) || a.name.en.localeCompare(b.name.en),
+      ),
   }));
 }
 

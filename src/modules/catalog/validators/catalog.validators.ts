@@ -114,6 +114,8 @@ export const createProductSchema = z.object({
   status: productStatusSchema.optional(),
   scheduledPublishAt: z.string().datetime().nullable().optional(),
   isUpcoming: z.boolean().optional(),
+  /** Lower numbers appear first on the public catalogue. */
+  sortOrder: z.number().int().optional(),
   createRedirectOnSlugChange: z.boolean().optional(),
 });
 
