@@ -25,6 +25,10 @@ const PLANT =
   "Survey No. 671/3, Laxmipura Nandasan, Rajpur, Taluka Kadi, Mahesana, Gujarat 384450, India";
 
 const FONT = "Arial, Helvetica, sans-serif";
+const INK = "#202124";
+const MUTED = "#5f6368";
+const LINE = "#e8eaed";
+const BLUE = "#0342ab";
 
 function resendClient() {
   const key = process.env.RESEND_API_KEY?.trim();
@@ -53,14 +57,19 @@ function clean(value: string | null | undefined) {
   return value?.trim() ?? "";
 }
 
+function logoHtml() {
+  const src = `${siteOrigin()}/brand/hg-alutek-logo.png`;
+  return `<img src="${src}" width="168" height="100" alt="HG Alutek" style="display:block;border:0;outline:none;text-decoration:none;width:168px;height:auto;" />`;
+}
+
 function detailRows(pairs: Array<[string, string]>) {
   return pairs
     .filter(([, value]) => value.trim())
     .map(
       ([label, value]) => `
         <tr>
-          <td style="padding:10px 16px 10px 0;border-bottom:1px solid #e6ebf2;font-family:${FONT};font-size:13px;line-height:1.4;color:#5c6b80;vertical-align:top;width:148px;">${escapeHtml(label)}</td>
-          <td style="padding:10px 0;border-bottom:1px solid #e6ebf2;font-family:${FONT};font-size:14px;line-height:1.45;color:#00122f;vertical-align:top;">${escapeHtml(value)}</td>
+          <td style="padding:14px 20px 14px 0;border-bottom:1px solid ${LINE};font-family:${FONT};font-size:13px;line-height:1.4;color:${MUTED};vertical-align:top;width:132px;">${escapeHtml(label)}</td>
+          <td style="padding:14px 0;border-bottom:1px solid ${LINE};font-family:${FONT};font-size:14px;line-height:1.5;color:${INK};vertical-align:top;">${escapeHtml(value)}</td>
         </tr>`,
     )
     .join("");
@@ -73,7 +82,7 @@ function textLines(pairs: Array<[string, string]>) {
     .join("\n");
 }
 
-function shell(opts: { preheader: string; body: string }) {
+function shell(opts: { preheader: string; body: string; footer: string }) {
   const preheader = escapeHtml(opts.preheader);
   return `<!DOCTYPE html>
 <html lang="en">
@@ -82,27 +91,25 @@ function shell(opts: { preheader: string; body: string }) {
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>${escapeHtml(siteConfig.name)}</title>
 </head>
-<body style="margin:0;padding:0;background:#f3f5f8;">
+<body style="margin:0;padding:0;background:#ffffff;">
   <div style="display:none;max-height:0;overflow:hidden;mso-hide:all;">${preheader}</div>
-  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#f3f5f8;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#ffffff" style="background:#ffffff;">
     <tr>
-      <td align="center" style="padding:28px 12px;">
-        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;">
+      <td align="center" style="padding:32px 20px 40px;">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:560px;">
           <tr>
-            <td style="padding:0 4px 14px;font-family:${FONT};font-size:13px;letter-spacing:0.14em;font-weight:700;color:#0342ab;">
-              HG ALUTEK
+            <td style="padding:0 0 28px;">
+              <a href="${siteOrigin()}" style="text-decoration:none;">${logoHtml()}</a>
             </td>
           </tr>
           <tr>
-            <td bgcolor="#ffffff" style="background:#ffffff;border:1px solid #e6ebf2;border-top:4px solid #0342ab;border-radius:8px;">
+            <td style="font-family:${FONT};color:${INK};">
               ${opts.body}
             </td>
           </tr>
           <tr>
-            <td style="padding:16px 4px 0;font-family:${FONT};font-size:12px;line-height:1.5;color:#6b778c;">
-              ${escapeHtml(siteConfig.name)} · Kadi, Gujarat<br />
-              ${escapeHtml(PLANT)}<br />
-              <a href="mailto:${SALES_EMAIL}" style="color:#0342ab;text-decoration:none;">${SALES_EMAIL}</a>
+            <td style="padding:28px 0 0;border-top:1px solid ${LINE};font-family:${FONT};font-size:12px;line-height:1.6;color:${MUTED};">
+              ${opts.footer}
             </td>
           </tr>
         </table>
@@ -115,13 +122,21 @@ function shell(opts: { preheader: string; body: string }) {
 
 function button(href: string, label: string) {
   return `
-    <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 8px;">
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:4px 0 8px;">
       <tr>
-        <td bgcolor="#0342ab" style="background:#0342ab;border-radius:6px;">
-          <a href="${escapeHtml(href)}" style="display:inline-block;padding:12px 18px;font-family:${FONT};font-size:14px;font-weight:700;line-height:1.2;color:#ffffff;text-decoration:none;">${escapeHtml(label)}</a>
+        <td bgcolor="${BLUE}" style="background:${BLUE};border-radius:4px;">
+          <a href="${escapeHtml(href)}" style="display:inline-block;padding:10px 18px;font-family:${FONT};font-size:14px;font-weight:700;line-height:20px;color:#ffffff;text-decoration:none;">${escapeHtml(label)}</a>
         </td>
       </tr>
     </table>`;
+}
+
+function footerNote(kind: "sales" | "buyer", reference: string) {
+  const reason =
+    kind === "sales"
+      ? "You received this because a visitor submitted the enquiry form on hgalutek.com."
+      : "You received this because an enquiry was submitted with this email address.";
+  return `${escapeHtml(siteConfig.name)}<br />${escapeHtml(PLANT)}<br /><a href="mailto:${SALES_EMAIL}" style="color:${BLUE};text-decoration:none;">${SALES_EMAIL}</a><br /><br />${reason}<br />Reference ${escapeHtml(reference)}`;
 }
 
 function enquiryPairs(lead: EnquiryEmailPayload): Array<[string, string]> {
@@ -144,30 +159,22 @@ function salesHtml(lead: EnquiryEmailPayload) {
   const notes = clean(lead.message);
   return shell({
     preheader: `${who} asked about ${product}. Reply to answer them.`,
+    footer: footerNote("sales", lead.id),
     body: `
-      <div style="padding:28px 28px 8px;font-family:${FONT};">
-        <p style="margin:0 0 8px;font-size:12px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#0342ab;">New enquiry</p>
-        <h1 style="margin:0 0 8px;font-size:22px;line-height:1.3;font-weight:700;color:#00122f;">${escapeHtml(who)}</h1>
-        <p style="margin:0 0 20px;font-size:15px;line-height:1.5;color:#334155;">Asked about ${escapeHtml(product)}. Reply goes to the buyer.</p>
-        ${button(`mailto:${clean(lead.email)}`, `Reply to ${clean(lead.name) || "buyer"}`)}
-      </div>
-      <div style="padding:0 28px 8px;">
-        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
-          ${detailRows(enquiryPairs(lead))}
-        </table>
-      </div>
+      <h1 style="margin:0 0 12px;font-size:22px;line-height:28px;font-weight:400;color:${INK};">New enquiry</h1>
+      <p style="margin:0 0 20px;font-size:14px;line-height:22px;color:${INK};">${escapeHtml(who)} asked about ${escapeHtml(product)}.</p>
+      ${button(`mailto:${clean(lead.email)}`, `Reply to ${clean(lead.name) || "buyer"}`)}
+      <p style="margin:28px 0 8px;font-size:14px;line-height:22px;font-weight:700;color:${INK};">Details</p>
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+        ${detailRows(enquiryPairs(lead))}
+      </table>
       ${
         notes
-          ? `<div style="padding:8px 28px 8px;">
-              <p style="margin:12px 0 6px;font-family:${FONT};font-size:12px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#5c6b80;">Notes</p>
-              <p style="margin:0;padding:14px 16px;background:#f7f9fc;border-radius:6px;font-family:${FONT};font-size:14px;line-height:1.55;color:#00122f;white-space:pre-wrap;">${escapeHtml(notes)}</p>
-            </div>`
+          ? `<p style="margin:24px 0 8px;font-size:14px;line-height:22px;font-weight:700;color:${INK};">Message</p>
+             <p style="margin:0 0 8px;font-size:14px;line-height:22px;color:${INK};white-space:pre-wrap;">${escapeHtml(notes)}</p>`
           : ""
       }
-      <p style="margin:0;padding:16px 28px 24px;font-family:${FONT};font-size:12px;line-height:1.5;color:#6b778c;">
-        Reference ${escapeHtml(lead.id)}<br />
-        Source ${escapeHtml(clean(lead.source) || "website")} · ${escapeHtml(clean(lead.locale) || "en")}
-      </p>`,
+      <p style="margin:20px 0 0;font-size:12px;line-height:18px;color:${MUTED};">Source ${escapeHtml(clean(lead.source) || "website")} · ${escapeHtml(clean(lead.locale) || "en")}</p>`,
   });
 }
 
@@ -195,34 +202,26 @@ function buyerHtml(lead: EnquiryEmailPayload) {
   return shell({
     preheader:
       "Sales will reply within 1–2 business days with feasibility and lead time.",
+    footer: footerNote("buyer", lead.id),
     body: `
-      <div style="padding:28px 28px 8px;font-family:${FONT};">
-        <p style="margin:0 0 8px;font-size:12px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#0342ab;">Enquiry received</p>
-        <h1 style="margin:0 0 12px;font-size:22px;line-height:1.3;font-weight:700;color:#00122f;">Thank you, ${escapeHtml(clean(lead.name) || "there")}.</h1>
-        <p style="margin:0 0 16px;font-size:15px;line-height:1.55;color:#334155;">
-          We have your ${product ? `enquiry for ${escapeHtml(product)}` : "enquiry"}.
-          The sales desk at the Kadi plant will check grade, quantity and lead time, then write back within <strong>1–2 business days</strong>.
-        </p>
-        <p style="margin:0 0 20px;font-size:15px;line-height:1.55;color:#334155;">
-          Reply to this email and it reaches <a href="mailto:${SALES_EMAIL}" style="color:#0342ab;text-decoration:none;">${SALES_EMAIL}</a>.
-        </p>
-      </div>
-      <div style="padding:0 28px 8px;">
-        <p style="margin:0 0 8px;font-family:${FONT};font-size:12px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#5c6b80;">What you sent</p>
-        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
-          ${detailRows([
-            ...enquiryPairs(lead).filter(([label]) => label !== "Email"),
-            ["Notes", notes],
-          ])}
-        </table>
-      </div>
-      <div style="padding:12px 28px 28px;font-family:${FONT};">
-        <p style="margin:8px 0 6px;font-size:12px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#5c6b80;">What happens next</p>
-        <p style="margin:0 0 8px;font-size:14px;line-height:1.55;color:#00122f;">1. We match the request to current ingot and deoxidation forms.</p>
-        <p style="margin:0 0 8px;font-size:14px;line-height:1.55;color:#00122f;">2. We reply to ${escapeHtml(clean(lead.email) || "you")} with feasibility and timing.</p>
-        <p style="margin:0 0 18px;font-size:14px;line-height:1.55;color:#00122f;">3. If the programme fits, we confirm grade, packing and price.</p>
-        <p style="margin:0;font-size:12px;line-height:1.5;color:#6b778c;">Reference ${escapeHtml(lead.id)}</p>
-      </div>`,
+      <h1 style="margin:0 0 12px;font-size:22px;line-height:28px;font-weight:400;color:${INK};">We received your enquiry</h1>
+      <p style="margin:0 0 12px;font-size:14px;line-height:22px;color:${INK};">Hello ${escapeHtml(clean(lead.name) || "there")},</p>
+      <p style="margin:0 0 12px;font-size:14px;line-height:22px;color:${INK};">
+        ${product ? `We have your request for ${escapeHtml(product)}.` : "We have your request."}
+        Sales at the Kadi plant will check grade, quantity and lead time, then reply within 1–2 business days.
+      </p>
+      <p style="margin:0 0 24px;font-size:14px;line-height:22px;color:${INK};">
+        Reply to this email and it goes to <a href="mailto:${SALES_EMAIL}" style="color:${BLUE};text-decoration:none;">${SALES_EMAIL}</a>.
+      </p>
+      <p style="margin:0 0 8px;font-size:14px;line-height:22px;font-weight:700;color:${INK};">Your request</p>
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+        ${detailRows([
+          ...enquiryPairs(lead).filter(([label]) => label !== "Email"),
+          ["Notes", notes],
+        ])}
+      </table>
+      <p style="margin:24px 0 8px;font-size:14px;line-height:22px;font-weight:700;color:${INK};">What happens next</p>
+      <p style="margin:0;font-size:14px;line-height:22px;color:${INK};">We match the request to the current ingot and deoxidation forms. If it fits, the reply includes grade, packing and price.</p>`,
   });
 }
 
