@@ -38,7 +38,7 @@ export async function AboutPage({ locale }: { locale: string }) {
       <PageHero
         locale={locale}
         title="Aluminium made for demanding programmes"
-        description="HG Alutech — aluminium ingots, cubes, shots, notch bars and deoxidizer products from Kadi / Mahesana, Gujarat."
+        description="HG Alutek — aluminium ingots, cubes, shots, notch bars and deoxidizer products from Kadi / Mahesana, Gujarat."
         secondaryLabel="View products"
         secondaryHref="products"
       />

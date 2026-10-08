@@ -17,8 +17,8 @@ async function main() {
   const stamp = Date.now();
 
   await upsertCompanyProfile({
-    legalName: "HG Alutech",
-    displayNames: { primary: "HG Alutech", alsoMention: [] },
+    legalName: "HG Alutek",
+    displayNames: { primary: "HG Alutek", alsoMention: [] },
     cin: "U00000XX0000XXX000000",
     gst: "00AAAAA0000A0Z0",
     registeredOffice: {

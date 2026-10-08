@@ -331,9 +331,7 @@ export async function resolvePublicNav(locale = "en"): Promise<PublicNavResolved
       logoHeightPx: clampLogoHeight(company?.logoDisplayHeightPx),
     },
     organizationName:
-      company?.legalName?.trim() ||
-      company?.displayNames?.primary?.trim() ||
-      "HG Alutech",
+      company?.legalName?.trim() || company?.displayNames?.primary?.trim() || "HG Alutek",
     socialLinks,
     footerQuickLinks: [...footer.products, ...footer.company, ...footer.support],
     footerContact,

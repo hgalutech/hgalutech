@@ -30,7 +30,7 @@ type PageHeroProps = {
  */
 export function PageHero({
   locale,
-  eyebrow = "HG Alutech",
+  eyebrow = "HG Alutek",
   title,
   description,
   ctaLabel = "Inquire",

@@ -141,7 +141,7 @@ export function SiteFooter({
       <div className="border-t border-white/10">
         <Container className="flex flex-col gap-3 py-4 min-[640px]:flex-row min-[640px]:items-center min-[640px]:justify-between">
           <p className="text-center text-xs text-on-dark-muted min-[640px]:text-left">
-            <span className="text-white/90">HG Alutech</span>
+            <span className="text-white/90">HG Alutek</span>
             {" · "}
             Copyright © {year}
           </p>

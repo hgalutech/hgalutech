@@ -41,17 +41,20 @@ const EXPORT = [
   },
   {
     title: "Corridor clarity",
-    body: "Export enquiries route to a dedicated mailbox — sales owns domestic programmes.",
+    body: "Export and domestic enquiries both reach the sales inbox.",
   },
 ] as const;
 
 export async function ProcurementPage({ locale }: { locale: string }) {
   const profile = await getCachedCompanyProfile();
   const contacts = [
-    { key: "sales", label: "Sales", value: profile?.emails.sales },
-    { key: "export", label: "Export", value: profile?.emails.export },
-    { key: "purchase", label: "Purchase", value: profile?.emails.purchase },
-  ].filter((c) => Boolean(c.value));
+    { key: "sales", label: "Sales", value: profile?.emails.sales?.trim() },
+    { key: "export", label: "Export", value: profile?.emails.export?.trim() },
+    { key: "purchase", label: "Purchase", value: profile?.emails.purchase?.trim() },
+  ].filter(
+    (c, index, all): c is { key: string; label: string; value: string } =>
+      Boolean(c.value) && all.findIndex((item) => item.value === c.value) === index,
+  );
 
   return (
     <>
@@ -85,9 +88,7 @@ export async function ProcurementPage({ locale }: { locale: string }) {
                   {contacts.length ? (
                     contacts.map((c) => (
                       <li key={c.key}>
-                        <span className="text-muted-foreground text-sm">
-                          {c.label}
-                        </span>
+                        <span className="text-muted-foreground text-sm">{c.label}</span>
                         <a
                           href={`mailto:${c.value}`}
                           className="mt-0.5 block font-semibold text-ink hover:underline"
@@ -110,16 +111,10 @@ export async function ProcurementPage({ locale }: { locale: string }) {
 
       <Section className="bg-bg-alt/40">
         <Container>
-          <SectionIntro
-            eyebrow="Export"
-            title="What export buyers usually ask first"
-          />
+          <SectionIntro eyebrow="Export" title="What export buyers usually ask first" />
           <FluidAutoGrid min="15rem" className="mt-8">
             {EXPORT.map((item) => (
-              <div
-                key={item.title}
-                className="border-t-2 border-brand-blue/55 pt-4"
-              >
+              <div key={item.title} className="border-t-2 border-brand-blue/55 pt-4">
                 <p className="font-semibold text-ink">{item.title}</p>
                 <p className="text-muted-foreground mt-2 text-[0.9375rem] leading-relaxed">
                   {item.body}

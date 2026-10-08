@@ -35,7 +35,7 @@ export async function CareersPage({ locale }: { locale: string }) {
     getCachedPublishedOpenings(),
   ]);
   const openings = openingsResult.items;
-  const hrEmail = profile?.emails.hr ?? null;
+  const hrEmail = profile?.emails.hr?.trim() || profile?.emails.sales?.trim() || null;
   const contactHref = localePath(locale, "contact");
 
   return (
@@ -119,10 +119,10 @@ export async function CareersPage({ locale }: { locale: string }) {
             <div className="mt-6 flex flex-wrap gap-3">
               {hrEmail ? (
                 <a
-                  href={`mailto:${hrEmail}?subject=${encodeURIComponent("Open application — HG Alutech")}`}
+                  href={`mailto:${hrEmail}?subject=${encodeURIComponent("Open application — HG Alutek")}`}
                   className="bg-ink hover:bg-ink/90 inline-flex min-h-11 items-center rounded-[var(--radius-md)] px-5 text-[0.875rem] font-semibold text-white transition-colors"
                 >
-                  Email HR
+                  Email us
                 </a>
               ) : null}
               <Link
@@ -134,7 +134,7 @@ export async function CareersPage({ locale }: { locale: string }) {
             </div>
             {hrEmail ? (
               <p className="text-muted-foreground mt-4 text-sm">
-                HR:{" "}
+                Write to{" "}
                 <a
                   className="font-semibold text-ink hover:underline"
                   href={`mailto:${hrEmail}`}

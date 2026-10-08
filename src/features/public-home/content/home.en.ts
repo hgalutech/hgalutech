@@ -101,14 +101,14 @@ export type HomeContent = {
   };
 };
 
-/** HG Alutech home copy for the Kadi / Mahesana campus. */
+/** HG Alutek home copy for the Kadi / Mahesana campus. */
 export const homeContentEn: HomeContent = {
   hero: {
     slides: [
       {
         imageSrc: "/products/aluminium-ingots.jpg",
         imageAlt: "Aluminium ingots packed for dispatch",
-        eyebrow: "HG Alutech · Kadi, Gujarat",
+        eyebrow: "HG Alutek · Kadi, Gujarat",
         title: "Aluminium you can specify and schedule",
         subtitle:
           "Aluminium ingots, plus cubes, shots, notch bars and deoxidizer products — chemistry, certificates, and a Kadi / Mahesana plant you can enquire against.",
@@ -142,9 +142,9 @@ export const homeContentEn: HomeContent = {
     ],
   },
   capability: {
-    eyebrow: "HG Alutech",
+    eyebrow: "HG Alutek",
     title: "Ingots and deoxidation forms.",
-    body: "HG Alutech supplies aluminium ingots, cubes, shots, notch bars and deoxidizer products from the Kadi / Mahesana campus.",
+    body: "HG Alutek supplies aluminium ingots, cubes, shots, notch bars and deoxidizer products from the Kadi / Mahesana campus.",
     highlightWords: ["ingots", "cubes", "shots", "deoxidizer"],
     stats: [
       { target: 5, suffix: "", label: "Current catalogue lines" },
@@ -246,7 +246,7 @@ export const homeContentEn: HomeContent = {
     title: "Frequently asked questions",
     items: [
       {
-        question: "What does HG Alutech supply?",
+        question: "What does HG Alutek supply?",
         answer:
           "Five current aluminium lines: ingots, cubes, shots, notch bars and deoxidizer products, from the Kadi / Mahesana campus in Gujarat.",
       },

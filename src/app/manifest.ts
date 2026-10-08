@@ -7,7 +7,7 @@ export default function manifest(): MetadataRoute.Manifest {
     name: siteConfig.name,
     short_name: siteConfig.shortName,
     description:
-      "Aluminium ingots, cubes, shots, notch bars and deoxidizer products from HG Alutech, Kadi, Gujarat.",
+      "Aluminium ingots, cubes, shots, notch bars and deoxidizer products from HG Alutek, Kadi, Gujarat.",
     start_url: "/en",
     scope: "/",
     display: "standalone",

@@ -14,7 +14,7 @@ type PageProps = {
 
 export const metadata: Metadata = {
   title: "Chairman’s Message",
-  description: "Messages from the leadership of HG Alutech.",
+  description: "Messages from the leadership of HG Alutek.",
 };
 
 export default async function ChairmansMessagePage({ params }: PageProps) {
@@ -26,7 +26,7 @@ export default async function ChairmansMessagePage({ params }: PageProps) {
       <PageHero
         locale={locale}
         title="Chairman’s Message"
-        description="Leadership messages from HG Alutech."
+        description="Leadership messages from HG Alutek."
         ctaLabel="Contact us"
         ctaHref="contact"
       />

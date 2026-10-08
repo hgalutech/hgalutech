@@ -23,8 +23,8 @@ type Shell = {
 const shells: Shell[] = [
   {
     slug: "about",
-    title: "About HG Alutech",
-    description: "About HG Alutech",
+    title: "About HG Alutek",
+    description: "About HG Alutek",
     blocks: [
       {
         id: "a-facts",

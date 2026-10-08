@@ -21,7 +21,7 @@ const spaceGrotesk = Space_Grotesk({
 });
 
 const APP_DESCRIPTION =
-  "HG Alutech — aluminium ingots, cubes, shots, notch bars and deoxidizer products from Kadi, Gujarat.";
+  "HG Alutek — aluminium ingots, cubes, shots, notch bars and deoxidizer products from Kadi, Gujarat.";
 
 export async function generateMetadata(): Promise<Metadata> {
   const logoSrc = (await resolveBrandLogoSrc()) || FALLBACK_BRAND_ICON;

@@ -59,7 +59,7 @@ export async function ContactPage({
       <header className="border-line border-b bg-bg">
         <Container className="py-[clamp(1.35rem,3vw,2rem)]">
           <p className="text-[0.7rem] font-bold tracking-[0.14em] text-brand-red uppercase">
-            HG Alutech
+            HG Alutek
           </p>
           <h1 className="font-display mt-1.5 text-[clamp(1.5rem,1.2rem+1.2vw,2rem)] font-semibold tracking-tight text-ink">
             Contact
@@ -98,7 +98,7 @@ export async function ContactPage({
               <Reveal className="border-line space-y-5 rounded-[var(--radius-lg)] border bg-bg-alt/50 p-4 sm:p-5">
                 <div>
                   <h2 className="font-display text-base font-semibold text-ink">
-                    {profile?.displayNames?.primary || profile?.legalName || "HG Alutech"}
+                    {profile?.displayNames?.primary || profile?.legalName || "HG Alutek"}
                   </h2>
                   {profile?.legalName &&
                   profile.legalName !== profile.displayNames?.primary ? (

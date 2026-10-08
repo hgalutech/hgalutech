@@ -35,7 +35,7 @@ const pages: PageSeed[] = [
     slug: "about",
     title: "Aluminium made for demanding programmes",
     description:
-      "HG Alutech — aluminium ingots, cubes, shots, notch bars and deoxidizer products from Kadi / Mahesana, Gujarat.",
+      "HG Alutek — aluminium ingots, cubes, shots, notch bars and deoxidizer products from Kadi / Mahesana, Gujarat.",
     blocks: [
       {
         id: "a-intro",
@@ -134,7 +134,7 @@ const pages: PageSeed[] = [
             {
               year: "2018",
               title: "Company incorporation",
-              body: "HG Alutech established to build secondary aluminium and extrusion capability in Gujarat — legal identity first, plant next.",
+              body: "HG Alutek established to build secondary aluminium and extrusion capability in Gujarat — legal identity first, plant next.",
             },
             {
               year: "Plant",
@@ -175,7 +175,7 @@ const pages: PageSeed[] = [
         data: {
           eyebrow: "Industries We Serve",
           title: "Where our products are specified",
-          body: "From renewable energy and construction to engineering, transportation, electrical systems and metal processing, HG Alutech supplies aluminium ingots and steel-deoxidation forms — cubes, shots, notch bars and deoxidizer products.",
+          body: "From renewable energy and construction to engineering, transportation, electrical systems and metal processing, HG Alutek supplies aluminium ingots and steel-deoxidation forms — cubes, shots, notch bars and deoxidizer products.",
           ctaLabel: "View products",
           ctaHref: "products",
         },

@@ -1,5 +1,5 @@
 /**
- * Realistic CMS seed for HG Alutech.
+ * Realistic CMS seed for HG Alutek.
  *
  * Sources:
  * - LEI registry: legal name + factory address (Kadi / Mahesana, Gujarat)
@@ -65,7 +65,7 @@ type SeedNode = {
 };
 
 const SOURCE =
-  "docs/Data product briefs + LEI registry (HG Alutech) — confirm before production";
+  "docs/Data product briefs + LEI registry (HG Alutek) — confirm before production";
 
 async function seedCategories() {
   const raw = readFileSync(resolve(process.cwd(), "config/categories.seed.json"), "utf8");
@@ -114,9 +114,9 @@ async function seedDictionaries() {
 async function seedCompany() {
   const existing = await getCompanyProfile();
   const payload = {
-    legalName: "HG Alutech",
+    legalName: "HG Alutek",
     displayNames: {
-      primary: "HG Alutech",
+      primary: "HG Alutek",
       alsoMention: [],
     },
     // CIN pending MCA confirmation — leave blank rather than invent
@@ -144,12 +144,13 @@ async function seedCompany() {
       { label: "Plant", number: "+91 2764 000001" },
     ],
     emails: {
-      sales: "sales@hgalutech.com",
-      export: "export@hgalutech.com",
-      purchase: "purchase@hgalutech.com",
-      investor: "investor@hgalutech.com",
-      hr: "hr@hgalutech.com",
-      quality: "quality@hgalutech.com",
+      // One GoDaddy mailbox. Other departments stay blank until a real inbox exists.
+      sales: "sales@hgalutek.com",
+      export: "",
+      purchase: "",
+      investor: "",
+      hr: "",
+      quality: "",
     },
     logo: {
       png: "/brand/hg-alutek-logo.png",
@@ -235,7 +236,7 @@ async function seedPeople() {
       boardDesignation: "Head of Finance & Accounts",
       yearsExperience: 6,
       bio: {
-        en: "Leads finance and accounts for HG Alutech at the Kadi / Mahesana campus — statutory reporting, working capital and commercial controls.",
+        en: "Leads finance and accounts for HG Alutek at the Kadi / Mahesana campus — statutory reporting, working capital and commercial controls.",
       },
       sortOrder: 5,
     },
@@ -502,14 +503,14 @@ async function seedCertifications() {
     {
       name: "Quality Policy",
       type: "quality_policy" as const,
-      issuer: "HG Alutech",
+      issuer: "HG Alutek",
       validFrom: "2025-04-01",
       validTo: null,
     },
     {
       name: "Mill Test Certificate Template (EN 10204 3.1)",
       type: "test_certificate_template" as const,
-      issuer: "HG Alutech — QC Lab",
+      issuer: "HG Alutek — QC Lab",
       validFrom: "2025-01-01",
       validTo: null,
     },
@@ -1174,7 +1175,7 @@ async function seedProducts() {
       moqNote: "Typical foundry programmes from ~5–10 MT — confirm grade & packing.",
       isUpcoming: false,
       description:
-        "HG Alutech manufactures aluminium ingots and secondary aluminium alloy ingots for foundries, die-casting manufacturers, alloy producers, remelting units and engineering industries. Manufactured with controlled chemistry and consistent quality, our ingots serve as reliable raw material for a wide range of downstream casting and manufacturing applications.",
+        "HG Alutek manufactures aluminium ingots and secondary aluminium alloy ingots for foundries, die-casting manufacturers, alloy producers, remelting units and engineering industries. Manufactured with controlled chemistry and consistent quality, our ingots serve as reliable raw material for a wide range of downstream casting and manufacturing applications.",
     },
     {
       sku: "HG-CUBE",
@@ -1390,7 +1391,7 @@ async function seedProducts() {
         categoryIds,
         imageUrl: p.imageUrl,
         seo: {
-          title: `${p.name.en} | HG Alutech`,
+          title: `${p.name.en} | HG Alutek`,
           description: p.description,
         },
         version: found.version,
@@ -1442,7 +1443,7 @@ async function seedProducts() {
       sortOrder: p.sortOrder,
       imageUrl: p.imageUrl,
       seo: {
-        title: `${p.name.en} | HG Alutech`,
+        title: `${p.name.en} | HG Alutek`,
         description: p.description,
       },
       status: "draft",
@@ -1484,7 +1485,7 @@ async function seedCmsPages() {
 }
 
 async function main() {
-  console.log("\n=== HG Alutech realistic seed ===\n");
+  console.log("\n=== HG Alutek realistic seed ===\n");
 
   console.log("1. Dictionaries");
   await seedDictionaries();

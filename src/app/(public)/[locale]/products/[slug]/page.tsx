@@ -24,7 +24,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const description =
     product.seo?.description?.trim() ||
     product.description?.trim() ||
-    `${product.name.en} (${product.sku}) — HG Alutech catalogue.`;
+    `${product.name.en} (${product.sku}) — HG Alutek catalogue.`;
 
   return {
     title,

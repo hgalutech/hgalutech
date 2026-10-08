@@ -175,7 +175,7 @@ export function LeadDetail({ id }: { id: string }) {
         <Button
           type="button"
           size="sm"
-          render={<a href={`mailto:${lead.email}?subject=Re: your HG Alutech RFQ`} />}
+          render={<a href={`mailto:${lead.email}?subject=Re: your HG Alutek RFQ`} />}
         >
           Reply by email
         </Button>

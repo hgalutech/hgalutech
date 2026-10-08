@@ -36,8 +36,8 @@ export const localeDefault = "en" as const;
 
 /** Every built public page slug (no invented routes). */
 export const publicPages = [
-  { slug: "", title: "Home", description: "HG Alutech home" },
-  { slug: "about", title: "About HG", description: "About HG Alutech" },
+  { slug: "", title: "Home", description: "HG Alutek home" },
+  { slug: "about", title: "About HG", description: "About HG Alutek" },
   {
     slug: "journey",
     title: "Our Journey",
@@ -265,7 +265,7 @@ export const footerQuickLinks: NavLink[] = [
 export const footerContactFallback = {
   address:
     "Survey No. 671/3, Laxmipura Nandasan, Rajpur, Kadi, Mahesana, Gujarat – 384450, India",
-  email: "sales@hgalutech.com",
+  email: "sales@hgalutek.com",
   phone: "+91 2764 000000",
   mapsUrl:
     "https://www.google.com/maps/search/?api=1&query=Laxmipura+Nandasan+Kadi+Mahesana",

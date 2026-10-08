@@ -45,7 +45,7 @@ export function BrandLockup({ href, className, src, heightPx }: BrandLockupProps
     <Link
       href={href}
       className={cn("inline-flex min-w-0 shrink items-center", className)}
-      aria-label="HG Alutech home"
+      aria-label="HG Alutek home"
     >
       <span
         className="relative inline-flex items-center justify-center overflow-hidden bg-transparent"
@@ -53,7 +53,7 @@ export function BrandLockup({ href, className, src, heightPx }: BrandLockupProps
       >
         <Image
           src={imageSrc}
-          alt="HG Alutech"
+          alt="HG Alutek"
           width={maxW * 2}
           height={h * 2}
           priority

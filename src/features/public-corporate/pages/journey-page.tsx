@@ -14,7 +14,7 @@ const MILESTONES = [
   {
     year: "2018",
     title: "Company incorporation",
-    body: "HG Alutech established to build secondary aluminium and extrusion capability in Gujarat — legal identity first, plant next.",
+    body: "HG Alutek established to build secondary aluminium and extrusion capability in Gujarat — legal identity first, plant next.",
   },
   {
     year: "Plant",

@@ -6,7 +6,7 @@ type PageProps = { params: Promise<{ locale: string }> };
 
 export const metadata: Metadata = {
   title: "Leadership",
-  description: "Board and leadership at HG Alutech.",
+  description: "Board and leadership at HG Alutek.",
 };
 
 export default async function Page({ params }: PageProps) {

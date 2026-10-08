@@ -26,7 +26,7 @@ function resendClient() {
 }
 
 function fromAddress() {
-  return process.env.RESEND_FROM?.trim() || "HG Alutech <onboarding@resend.dev>";
+  return process.env.RESEND_FROM?.trim() || "HG Alutek <onboarding@resend.dev>";
 }
 
 function escapeHtml(s: string) {
